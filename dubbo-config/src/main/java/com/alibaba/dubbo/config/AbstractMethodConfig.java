@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,89 +21,89 @@ import com.alibaba.dubbo.rpc.cluster.LoadBalance;
 
 /**
  * AbstractMethodConfig
- * 
+ *
  * @author william.liangf
  */
 public abstract class AbstractMethodConfig extends AbstractConfig {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    // 远程调用超时时间(毫秒)
-    protected Integer             timeout;
+  // 远程调用超时时间(毫秒)
+  protected Integer timeout;
 
-    // 重试次数
-    protected Integer             retries;
+  // 重试次数
+  protected Integer retries;
 
-    // 最大并发调用
-    protected Integer             actives;
-    
-    // 负载均衡
-    protected String              loadbalance;
+  // 最大并发调用
+  protected Integer actives;
 
-    // 是否异步
-    protected Boolean             async;
-    
-    // 异步发送是否等待发送成功
-    protected Boolean             sent;
+  // 负载均衡
+  protected String loadbalance;
 
-    // 自定义参数
-    protected Map<String, String> parameters;
+  // 是否异步
+  protected Boolean async;
 
-    public Integer getTimeout() {
-        return timeout;
-    }
+  // 异步发送是否等待发送成功
+  protected Boolean sent;
 
-    public void setTimeout(Integer timeout) {
-        this.timeout = timeout;
-    }
+  // 自定义参数
+  protected Map<String, String> parameters;
 
-    public Integer getRetries() {
-        return retries;
-    }
+  public Integer getTimeout() {
+    return timeout;
+  }
 
-    public void setRetries(Integer retries) {
-        this.retries = retries;
-    }
+  public void setTimeout(Integer timeout) {
+    this.timeout = timeout;
+  }
 
-    public String getLoadbalance() {
-        return loadbalance;
-    }
+  public Integer getRetries() {
+    return retries;
+  }
 
-    public void setLoadbalance(String loadbalance) {
-        checkExtension(LoadBalance.class, "loadbalance", loadbalance);
-        this.loadbalance = loadbalance;
-    }
+  public void setRetries(Integer retries) {
+    this.retries = retries;
+  }
 
-    public Boolean isAsync() {
-        return async;
-    }
+  public String getLoadbalance() {
+    return loadbalance;
+  }
 
-    public void setAsync(Boolean async) {
-        this.async = async;
-    }
+  public void setLoadbalance(String loadbalance) {
+    checkExtension(LoadBalance.class, "loadbalance", loadbalance);
+    this.loadbalance = loadbalance;
+  }
 
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
+  public Boolean isAsync() {
+    return async;
+  }
 
-    public void setParameters(Map<String, String> parameters) {
-        checkParameterName(parameters);
-        this.parameters = parameters;
-    }
+  public void setAsync(Boolean async) {
+    this.async = async;
+  }
 
-    public Integer getActives() {
-        return actives;
-    }
-    
-    public void setActives(Integer actives) {
-        this.actives = actives;
-    }
+  public Map<String, String> getParameters() {
+    return parameters;
+  }
 
-    public Boolean getSent() {
-        return sent;
-    }
+  public void setParameters(Map<String, String> parameters) {
+    checkParameterName(parameters);
+    this.parameters = parameters;
+  }
 
-    public void setSent(Boolean sent) {
-        this.sent = sent;
-    }
+  public Integer getActives() {
+    return actives;
+  }
+
+  public void setActives(Integer actives) {
+    this.actives = actives;
+  }
+
+  public Boolean getSent() {
+    return sent;
+  }
+
+  public void setSent(Boolean sent) {
+    this.sent = sent;
+  }
 }

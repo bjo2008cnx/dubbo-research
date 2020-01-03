@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,80 +39,80 @@ import com.alibaba.dubbo.remoting.transport.support.handler.ChannelHandlers;
 
 /**
  * GrizzlyServer
- * 
+ *
  * @author william.liangf
  */
 public class GrizzlyServer extends AbstractServer {
 
-    private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
-    
-    private TCPNIOTransport transport;
+  private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
 
-    public GrizzlyServer(URL url, ChannelHandler handler) throws RemotingException {
-        super(url, ChannelHandlers.wrap(handler, url));
-    }
+  private TCPNIOTransport transport;
 
-    @Override
-    protected void doOpen() throws Throwable {
-        FilterChainBuilder filterChainBuilder = FilterChainBuilder.stateless();
-        filterChainBuilder.add(new TransportFilter());
-        
-        filterChainBuilder.add(new GrizzlyCodecAdapter(getCodec(), getDownstreamCodec(), getUrl(), this));
-        filterChainBuilder.add(new GrizzlyHandler(getUrl(), this));
-        TCPNIOTransportBuilder builder = TCPNIOTransportBuilder.newInstance();
-        ThreadPoolConfig config = builder.getWorkerThreadPoolConfig(); 
-        config.setPoolName(SERVER_THREAD_POOL_NAME).setQueueLimit(-1);
-        String threadpool = getUrl().getParameter(Constants.THREADPOOL_KEY, Constants.DEFAULT_THREADPOOL);
-        if (Constants.DEFAULT_THREADPOOL.equals(threadpool)) {
-            int threads = getUrl().getPositiveIntParameter(Constants.THREADS_KEY, Constants.DEFAULT_THREADS);
-            config.setCorePoolSize(threads).setMaxPoolSize(threads)
-                .setKeepAliveTime(0L, TimeUnit.SECONDS); 
-        } else if ("cached".equals(threadpool)) {
-            int threads = getUrl().getPositiveIntParameter(Constants.THREADS_KEY, Integer.MAX_VALUE);
-            config.setCorePoolSize(0).setMaxPoolSize(threads)
-                .setKeepAliveTime(60L, TimeUnit.SECONDS);
-        } else {
-            throw new IllegalArgumentException("Unsupported threadpool type " + threadpool);
-        }
-        builder.setKeepAlive(true).setReuseAddress(false)
-                .setIOStrategy(SameThreadIOStrategy.getInstance());
-        transport = builder.build();
-        transport.setProcessor(filterChainBuilder.build());
-        transport.bind(getBindAddress());
-        transport.start();
-    }
+  public GrizzlyServer(URL url, ChannelHandler handler) throws RemotingException {
+    super(url, ChannelHandlers.wrap(handler, url));
+  }
 
-    @Override
-    protected void doClose() throws Throwable {
-        try {
-            transport.stop();
-        } catch (Throwable e) {
-            logger.warn(e.getMessage(), e);
-        }
-    }
+  @Override
+  protected void doOpen() throws Throwable {
+    FilterChainBuilder filterChainBuilder = FilterChainBuilder.stateless();
+    filterChainBuilder.add(new TransportFilter());
 
-    public boolean isBound() {
-        return ! transport.isStopped();
+    filterChainBuilder.add(new GrizzlyCodecAdapter(getCodec(), getDownstreamCodec(), getUrl(), this));
+    filterChainBuilder.add(new GrizzlyHandler(getUrl(), this));
+    TCPNIOTransportBuilder builder = TCPNIOTransportBuilder.newInstance();
+    ThreadPoolConfig config = builder.getWorkerThreadPoolConfig();
+    config.setPoolName(SERVER_THREAD_POOL_NAME).setQueueLimit(-1);
+    String threadpool = getUrl().getParameter(Constants.THREADPOOL_KEY, Constants.DEFAULT_THREADPOOL);
+    if (Constants.DEFAULT_THREADPOOL.equals(threadpool)) {
+      int threads = getUrl().getPositiveIntParameter(Constants.THREADS_KEY, Constants.DEFAULT_THREADS);
+      config.setCorePoolSize(threads).setMaxPoolSize(threads)
+          .setKeepAliveTime(0L, TimeUnit.SECONDS);
+    } else if ("cached".equals(threadpool)) {
+      int threads = getUrl().getPositiveIntParameter(Constants.THREADS_KEY, Integer.MAX_VALUE);
+      config.setCorePoolSize(0).setMaxPoolSize(threads)
+          .setKeepAliveTime(60L, TimeUnit.SECONDS);
+    } else {
+      throw new IllegalArgumentException("Unsupported threadpool type " + threadpool);
     }
+    builder.setKeepAlive(true).setReuseAddress(false)
+        .setIOStrategy(SameThreadIOStrategy.getInstance());
+    transport = builder.build();
+    transport.setProcessor(filterChainBuilder.build());
+    transport.bind(getBindAddress());
+    transport.start();
+  }
 
-    public Collection<Channel> getChannels() {
-        return channels.values();
+  @Override
+  protected void doClose() throws Throwable {
+    try {
+      transport.stop();
+    } catch (Throwable e) {
+      logger.warn(e.getMessage(), e);
     }
+  }
 
-    public Channel getChannel(InetSocketAddress remoteAddress) {
-        return channels.get(NetUtils.toAddressString(remoteAddress));
-    }
+  public boolean isBound() {
+    return !transport.isStopped();
+  }
 
-    @Override
-    public void connected(Channel ch) throws RemotingException {
-        channels.put(NetUtils.toAddressString(ch.getRemoteAddress()), ch);
-        super.connected(ch);
-    }
+  public Collection<Channel> getChannels() {
+    return channels.values();
+  }
 
-    @Override
-    public void disconnected(Channel ch) throws RemotingException {
-        channels.remove(NetUtils.toAddressString(ch.getRemoteAddress()));
-        super.disconnected(ch);
-    }
+  public Channel getChannel(InetSocketAddress remoteAddress) {
+    return channels.get(NetUtils.toAddressString(remoteAddress));
+  }
+
+  @Override
+  public void connected(Channel ch) throws RemotingException {
+    channels.put(NetUtils.toAddressString(ch.getRemoteAddress()), ch);
+    super.connected(ch);
+  }
+
+  @Override
+  public void disconnected(Channel ch) throws RemotingException {
+    channels.remove(NetUtils.toAddressString(ch.getRemoteAddress()));
+    super.disconnected(ch);
+  }
 
 }

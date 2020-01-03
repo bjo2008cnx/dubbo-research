@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,46 +25,46 @@ import com.alibaba.dubbo.container.Container;
 
 /**
  * Standalone
- * 
+ *
  * @author william.liangf
  */
 @Extension("standalone")
 public class StandaloneContainer implements Container {
 
-    private static final Logger LOGGER                = LoggerFactory.getLogger(StandaloneContainer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(StandaloneContainer.class);
 
-    private static final String SPRING_CONFIG_KEY     = "spring.config";
-    
-    private static final String DEFAULT_SPRING_CONFIG = "classpath*:META-INF/spring/*.xml";
+  private static final String SPRING_CONFIG_KEY = "spring.config";
 
-    private ClassPathXmlApplicationContext context;
+  private static final String DEFAULT_SPRING_CONFIG = "classpath*:META-INF/spring/*.xml";
 
-    public ApplicationContext getApplicationContext() {
-        return context;
+  private ClassPathXmlApplicationContext context;
+
+  public ApplicationContext getApplicationContext() {
+    return context;
+  }
+
+  public void start() {
+    String configPath = System.getProperty(SPRING_CONFIG_KEY);
+    if (configPath == null || configPath.length() == 0) {
+      configPath = DEFAULT_SPRING_CONFIG;
     }
-    
-    public void start() {
-        String configPath = System.getProperty(SPRING_CONFIG_KEY);
-        if (configPath == null || configPath.length() == 0) {
-            configPath = DEFAULT_SPRING_CONFIG;
-        }
-        context = new ClassPathXmlApplicationContext(configPath.split("[,\\s]+"));
-        context.start();
-        LOGGER.info("Dubbo standalone container started!");
-    }
+    context = new ClassPathXmlApplicationContext(configPath.split("[,\\s]+"));
+    context.start();
+    LOGGER.info("Dubbo standalone container started!");
+  }
 
-    public void stop() {
-        try {
-            context.stop();
-        } catch (Throwable e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        try {
-            context.close();
-        } catch (Throwable e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        LOGGER.info("Dubbo standalone container stopped!");
+  public void stop() {
+    try {
+      context.stop();
+    } catch (Throwable e) {
+      LOGGER.error(e.getMessage(), e);
     }
+    try {
+      context.close();
+    } catch (Throwable e) {
+      LOGGER.error(e.getMessage(), e);
+    }
+    LOGGER.info("Dubbo standalone container stopped!");
+  }
 
 }

@@ -15,19 +15,19 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<dubbo:application name="generic-provider" />
+  <dubbo:application name="generic-provider"/>
 
-	<dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234" />
+  <dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234"/>
 
-	<dubbo:protocol name="dubbo" port="20881" />
+  <dubbo:protocol name="dubbo" port="20881"/>
 
-	<dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" generic="true" ref="demoService" />
+  <dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" generic="true" ref="demoService"/>
 
-	<bean id="demoService" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceGenericImpl" />
+  <bean id="demoService" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceGenericImpl"/>
 
 </beans>

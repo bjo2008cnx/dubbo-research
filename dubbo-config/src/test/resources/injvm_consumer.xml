@@ -15,21 +15,21 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<dubbo:application name="simple-consumer" />
+  <dubbo:application name="simple-consumer"/>
 
-	<dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234" />
-	
-	<dubbo:protocol name="injvm" />
-	
-	<dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" ref="demoServiceServer" version="1.0.0" registry="N/A" />
+  <dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234"/>
 
-	<bean id="demoServiceServer" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceImpl" />
+  <dubbo:protocol name="injvm"/>
 
-	<dubbo:reference id="demoService" interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" />
+  <dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" ref="demoServiceServer" version="1.0.0" registry="N/A"/>
+
+  <bean id="demoServiceServer" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceImpl"/>
+
+  <dubbo:reference id="demoService" interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0"/>
 
 </beans>

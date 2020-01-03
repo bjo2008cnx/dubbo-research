@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,46 +19,42 @@ import java.io.Serializable;
 
 /**
  * TestRequest.
- * 
+ *
  * @author qian.lei
  */
 
-class DemoRequest implements Serializable
-{
-	private static final long serialVersionUID = -2579095288792344869L;
+class DemoRequest implements Serializable {
 
-	private String mServiceName;
-	
-	private String mMethodName;
+  private static final long serialVersionUID = -2579095288792344869L;
 
-	private Class<?>[] mParameterTypes;
+  private String mServiceName;
 
-	private Object[] mArguments;
+  private String mMethodName;
 
-	public DemoRequest(String serviceName,String methodName, Class<?>[] parameterTypes,Object[] args)
-	{
-		mServiceName = serviceName;
-		mMethodName = methodName;
-		mParameterTypes = parameterTypes;
-		mArguments = args;
-	}
+  private Class<?>[] mParameterTypes;
 
-	public String getServiceName()
-	{
-		return mServiceName;
-	}
+  private Object[] mArguments;
 
-	public String getMethodName()
-	{
-		return mMethodName;
-	}
+  public DemoRequest(String serviceName, String methodName, Class<?>[] parameterTypes, Object[] args) {
+    mServiceName = serviceName;
+    mMethodName = methodName;
+    mParameterTypes = parameterTypes;
+    mArguments = args;
+  }
 
-	public Class<?>[] getParameterTypes() {
-		return mParameterTypes;
-	}
+  public String getServiceName() {
+    return mServiceName;
+  }
 
-	public Object[] getArguments()
-	{
-		return mArguments;
-	}
+  public String getMethodName() {
+    return mMethodName;
+  }
+
+  public Class<?>[] getParameterTypes() {
+    return mParameterTypes;
+  }
+
+  public Object[] getArguments() {
+    return mArguments;
+  }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,77 +25,77 @@ import com.alibaba.dubbo.registry.Registry;
 
 /**
  * TODO Comment of MockRegistry
- * @author haomin.liuhm
  *
+ * @author haomin.liuhm
  */
 public class MockRegistry implements Registry {
 
-    static URL subscribedUrl = new URL("null", "0.0.0.0", 0);
-    
-    public static URL getSubscribedUrl(){
-        return subscribedUrl;
-    }
-    
-    /* 
-     * @see com.alibaba.dubbo.common.Node#getUrl()
-     */
-    public URL getUrl() {
-        return null;
-    }
+  static URL subscribedUrl = new URL("null", "0.0.0.0", 0);
 
-    /* 
-     * @see com.alibaba.dubbo.common.Node#isAvailable()
-     */
-    public boolean isAvailable() {
-        return true;
-    }
+  public static URL getSubscribedUrl() {
+    return subscribedUrl;
+  }
 
-    /* 
-     * @see com.alibaba.dubbo.common.Node#destroy()
-     */
-    public void destroy() {
-        
-    }
+  /*
+   * @see com.alibaba.dubbo.common.Node#getUrl()
+   */
+  public URL getUrl() {
+    return null;
+  }
 
-    /* 
-     * @see com.alibaba.dubbo.registry.RegistryService#register(com.alibaba.dubbo.common.URL)
-     */
-    public void register(URL url) {
-        
-    }
+  /*
+   * @see com.alibaba.dubbo.common.Node#isAvailable()
+   */
+  public boolean isAvailable() {
+    return true;
+  }
 
-    /* 
-     * @see com.alibaba.dubbo.registry.RegistryService#unregister(com.alibaba.dubbo.common.URL)
-     */
-    public void unregister(URL url) {
-        
-    }
+  /*
+   * @see com.alibaba.dubbo.common.Node#destroy()
+   */
+  public void destroy() {
 
-    /* 
-     * @see com.alibaba.dubbo.registry.RegistryService#subscribe(com.alibaba.dubbo.common.URL, com.alibaba.dubbo.registry.NotifyListener)
-     */
-    public void subscribe(URL url, NotifyListener listener) {
-        this.subscribedUrl = url;
-        List<URL> urls = new ArrayList<URL>();
-        
-        urls.add(url.setProtocol("mockprotocol")
-                    .addParameter(Constants.METHODS_KEY, "sayHello"));
-        
-        listener.notify(urls);
-    }
+  }
 
-    /* 
-     * @see com.alibaba.dubbo.registry.RegistryService#unsubscribe(com.alibaba.dubbo.common.URL, com.alibaba.dubbo.registry.NotifyListener)
-     */
-    public void unsubscribe(URL url, NotifyListener listener) {
-        
-    }
+  /*
+   * @see com.alibaba.dubbo.registry.RegistryService#register(com.alibaba.dubbo.common.URL)
+   */
+  public void register(URL url) {
 
-    /* 
-     * @see com.alibaba.dubbo.registry.RegistryService#lookup(com.alibaba.dubbo.common.URL)
-     */
-    public List<URL> lookup(URL url) {
-        return null;
-    }
+  }
+
+  /*
+   * @see com.alibaba.dubbo.registry.RegistryService#unregister(com.alibaba.dubbo.common.URL)
+   */
+  public void unregister(URL url) {
+
+  }
+
+  /*
+   * @see com.alibaba.dubbo.registry.RegistryService#subscribe(com.alibaba.dubbo.common.URL, com.alibaba.dubbo.registry.NotifyListener)
+   */
+  public void subscribe(URL url, NotifyListener listener) {
+    this.subscribedUrl = url;
+    List<URL> urls = new ArrayList<URL>();
+
+    urls.add(url.setProtocol("mockprotocol")
+        .addParameter(Constants.METHODS_KEY, "sayHello"));
+
+    listener.notify(urls);
+  }
+
+  /*
+   * @see com.alibaba.dubbo.registry.RegistryService#unsubscribe(com.alibaba.dubbo.common.URL, com.alibaba.dubbo.registry.NotifyListener)
+   */
+  public void unsubscribe(URL url, NotifyListener listener) {
+
+  }
+
+  /*
+   * @see com.alibaba.dubbo.registry.RegistryService#lookup(com.alibaba.dubbo.common.URL)
+   */
+  public List<URL> lookup(URL url) {
+    return null;
+  }
 
 }

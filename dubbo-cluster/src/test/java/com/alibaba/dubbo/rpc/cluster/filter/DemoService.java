@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,9 @@ package com.alibaba.dubbo.rpc.cluster.filter;
  * <code>TestService</code>
  */
 
-public interface DemoService
-{
-	String sayHello(String name);
+public interface DemoService {
 
-	int plus(int a,int b);
+  String sayHello(String name);
+
+  int plus(int a, int b);
 }

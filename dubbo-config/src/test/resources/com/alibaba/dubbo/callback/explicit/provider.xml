@@ -15,29 +15,30 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<dubbo:application name="rpc-callback-demo" />
+  <dubbo:application name="rpc-callback-demo"/>
 
-	<dubbo:registry address="127.0.0.1:9234" />
-	
-	<dubbo:protocol name="dubbo" port="20881" codec="dubbo"/>
-	
-	<bean id="demoService" class="com.alibaba.dubbo.callback.explicit.test.DemoServiceImpl" />
-	
-	<dubbo:service interface="com.alibaba.dubbo.callback.explicit.test.IDemoService" ref="demoService" version="1.0.0" group="cn" callbacks="1">
-		<dubbo:method name="xxx">
-			<dubbo:argument index="0" callback="true" />
-		</dubbo:method>
-		<dubbo:method name="xxx2">
-			<dubbo:argument type="com.alibaba.dubbo.callback.explicit.test.IDemoCallback" callback="true" />
-		</dubbo:method>
-		<dubbo:method name="unxxx">
-			<dubbo:argument type="com.alibaba.dubbo.callback.explicit.test.IDemoCallback" callback="false" />
-		</dubbo:method>
-	</dubbo:service>
+  <dubbo:registry address="127.0.0.1:9234"/>
+
+  <dubbo:protocol name="dubbo" port="20881" codec="dubbo"/>
+
+  <bean id="demoService" class="com.alibaba.dubbo.callback.explicit.test.DemoServiceImpl"/>
+
+  <dubbo:service interface="com.alibaba.dubbo.callback.explicit.test.IDemoService" ref="demoService" version="1.0.0" group="cn"
+    callbacks="1">
+    <dubbo:method name="xxx">
+      <dubbo:argument index="0" callback="true"/>
+    </dubbo:method>
+    <dubbo:method name="xxx2">
+      <dubbo:argument type="com.alibaba.dubbo.callback.explicit.test.IDemoCallback" callback="true"/>
+    </dubbo:method>
+    <dubbo:method name="unxxx">
+      <dubbo:argument type="com.alibaba.dubbo.callback.explicit.test.IDemoCallback" callback="false"/>
+    </dubbo:method>
+  </dubbo:service>
 
 </beans>

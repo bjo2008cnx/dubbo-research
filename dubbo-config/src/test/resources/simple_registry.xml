@@ -15,30 +15,31 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
-	
-	<dubbo:application name="simple-registry" />
-	
-	<dubbo:protocol name="dubbo" port="9090" />
-	
-	<dubbo:service interface="com.alibaba.dubbo.registry.RegistryService" ref="registryService" protocol="dubbo" registry="N/A" callbacks="1000" ondisconnect="disconnect">
-		<dubbo:method name="subscribe">
-			<dubbo:argument index="1" callback="true" />
-		</dubbo:method>
-		<dubbo:method name="unsubscribe">
-			<dubbo:argument index="1" callback="false" />
-		</dubbo:method>
-	</dubbo:service>
-	
-	<bean id="registryService" class="com.alibaba.dubbo.registry.support.SimpleRegistryService" >
-		<property name="registries">
-			<list>
-				<value>127.0.0.1:9091</value>
-			</list>
-		</property>
-	</bean>
-	
+
+  <dubbo:application name="simple-registry"/>
+
+  <dubbo:protocol name="dubbo" port="9090"/>
+
+  <dubbo:service interface="com.alibaba.dubbo.registry.RegistryService" ref="registryService" protocol="dubbo" registry="N/A"
+    callbacks="1000" ondisconnect="disconnect">
+    <dubbo:method name="subscribe">
+      <dubbo:argument index="1" callback="true"/>
+    </dubbo:method>
+    <dubbo:method name="unsubscribe">
+      <dubbo:argument index="1" callback="false"/>
+    </dubbo:method>
+  </dubbo:service>
+
+  <bean id="registryService" class="com.alibaba.dubbo.registry.support.SimpleRegistryService">
+    <property name="registries">
+      <list>
+        <value>127.0.0.1:9091</value>
+      </list>
+    </property>
+  </bean>
+
 </beans>

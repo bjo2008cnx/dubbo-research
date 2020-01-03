@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,61 +19,59 @@ import java.lang.reflect.Field;
 
 import junit.framework.TestCase;
 
-public class ClassGeneratorTest extends TestCase
-{
-	@SuppressWarnings("unchecked")
-	public void testMain() throws Exception
-	{
-		Bean b = new Bean();
-		Field fname = null, fs[] = Bean.class.getDeclaredFields();
-		for( Field f : fs )
-		{
-			f.setAccessible(true);
-			if( f.getName().equals("name") )
-				fname = f;
-		}
+public class ClassGeneratorTest extends TestCase {
 
-		ClassGenerator cg = ClassGenerator.newInstance();
-		cg.setClassName(Bean.class.getName() + "$Builder");
-		cg.addInterface(Builder.class);
+  @SuppressWarnings("unchecked")
+  public void testMain() throws Exception {
+    Bean b = new Bean();
+    Field fname = null, fs[] = Bean.class.getDeclaredFields();
+    for (Field f : fs) {
+      f.setAccessible(true);
+      if (f.getName().equals("name")) {
+        fname = f;
+      }
+    }
 
-		cg.addField("public static java.lang.reflect.Field FNAME;");
+    ClassGenerator cg = ClassGenerator.newInstance();
+    cg.setClassName(Bean.class.getName() + "$Builder");
+    cg.addInterface(Builder.class);
 
-		cg.addMethod("public Object getName("+Bean.class.getName()+" o){ boolean[][][] bs = new boolean[0][][]; return (String)FNAME.get($1); }");
-		cg.addMethod("public void setName("+Bean.class.getName()+" o, Object name){ FNAME.set($1, $2); }");
+    cg.addField("public static java.lang.reflect.Field FNAME;");
 
-		cg.addDefaultConstructor();
-		Class<?> cl = cg.toClass();
-		cl.getField("FNAME").set(null, fname);
+    cg.addMethod(
+        "public Object getName(" + Bean.class.getName() + " o){ boolean[][][] bs = new boolean[0][][]; return (String)FNAME.get($1); }");
+    cg.addMethod("public void setName(" + Bean.class.getName() + " o, Object name){ FNAME.set($1, $2); }");
 
-		System.out.println(cl.getName());
-		Builder<String> builder = (Builder<String>)cl.newInstance();
-		System.out.println(b.getName());
-		builder.setName(b, "ok");
-		System.out.println(b.getName());
-	}
+    cg.addDefaultConstructor();
+    Class<?> cl = cg.toClass();
+    cl.getField("FNAME").set(null, fname);
+
+    System.out.println(cl.getName());
+    Builder<String> builder = (Builder<String>) cl.newInstance();
+    System.out.println(b.getName());
+    builder.setName(b, "ok");
+    System.out.println(b.getName());
+  }
 }
 
-class Bean
-{
-	int age = 30;
+class Bean {
 
-	private String name = "qianlei";
+  int age = 30;
 
-	public int getAge()
-	{
-		return age;
-	}
+  private String name = "qianlei";
 
-	public String getName()
-	{
-		return name;
-	}
+  public int getAge() {
+    return age;
+  }
+
+  public String getName() {
+    return name;
+  }
 }
 
-interface Builder<T>
-{
-	T getName(Bean bean);
+interface Builder<T> {
 
-	void setName(Bean bean, T name);
+  T getName(Bean bean);
+
+  void setName(Bean bean, T name);
 }

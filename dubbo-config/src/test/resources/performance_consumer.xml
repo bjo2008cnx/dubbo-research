@@ -15,15 +15,16 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<dubbo:application name="performance-consumer" />
+  <dubbo:application name="performance-consumer"/>
 
-	<dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234" />
+  <dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234"/>
 
-	<dubbo:reference id="demoService" interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" connections="1" retries="0" timeout="5000" actives="10" />
+  <dubbo:reference id="demoService" interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" connections="1" retries="0"
+    timeout="5000" actives="10"/>
 
 </beans>

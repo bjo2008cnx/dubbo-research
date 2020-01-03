@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,30 +22,30 @@ import com.alibaba.dubbo.rpc.CustomArgument;
  * <code>TestService</code>
  */
 
-public interface DemoService
-{
-	void sayHello(String name);
+public interface DemoService {
 
-	String echo(String text);
+  void sayHello(String name);
 
-	long timestamp();
+  String echo(String text);
 
-	String getThreadName();
+  long timestamp();
 
-	int getSize(String[] strs);
+  String getThreadName();
 
-	int getSize(Object[] os);
+  int getSize(String[] strs);
 
-	Object invoke(String service, String method) throws Exception;
+  int getSize(Object[] os);
 
-	int stringLength(String str);
+  Object invoke(String service, String method) throws Exception;
 
-	Type enumlength(Type... types);
-	
+  int stringLength(String str);
+
+  Type enumlength(Type... types);
+
 //	Type enumlength(Type type);
-	
-	String get(CustomArgument arg1);
-	
-	byte getbyte(byte arg);
-	
+
+  String get(CustomArgument arg1);
+
+  byte getbyte(byte arg);
+
 }

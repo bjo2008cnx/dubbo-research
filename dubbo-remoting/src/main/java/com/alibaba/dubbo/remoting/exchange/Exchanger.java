@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,33 +24,29 @@ import com.alibaba.dubbo.remoting.exchange.support.header.HeaderExchanger;
 
 /**
  * Exchanger. (SPI, Singleton, ThreadSafe)
- * 
- * <a href="http://en.wikipedia.org/wiki/Message_Exchange_Pattern">Message Exchange Pattern</a>
- * <a href="http://en.wikipedia.org/wiki/Request-response">Request-Response</a>
- * 
+ *
+ * <a href="http://en.wikipedia.org/wiki/Message_Exchange_Pattern">Message Exchange Pattern</a> <a
+ * href="http://en.wikipedia.org/wiki/Request-response">Request-Response</a>
+ *
  * @author william.liangf
  */
 @Extension(HeaderExchanger.NAME)
 public interface Exchanger {
 
-    /**
-     * bind.
-     * 
-     * @param url
-     * @param handler
-     * @return message server
-     */
-    @Adaptive({Constants.EXCHANGER_KEY})
-    ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException;
+  /**
+   * bind.
+   *
+   * @return message server
+   */
+  @Adaptive({Constants.EXCHANGER_KEY})
+  ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException;
 
-    /**
-     * connect.
-     * 
-     * @param url
-     * @param handler
-     * @return message channel
-     */
-    @Adaptive({Constants.EXCHANGER_KEY})
-    ExchangeClient connect(URL url, ExchangeHandler handler) throws RemotingException;
+  /**
+   * connect.
+   *
+   * @return message channel
+   */
+  @Adaptive({Constants.EXCHANGER_KEY})
+  ExchangeClient connect(URL url, ExchangeHandler handler) throws RemotingException;
 
 }

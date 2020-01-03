@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,38 +23,38 @@ import com.alibaba.dubbo.rpc.RpcException;
 
 /**
  * InvokerWrapper
- * 
+ *
  * @author william.liangf
  */
 public class InvokerWrapper<T> implements Invoker<T> {
-    
-    private final Invoker<T> invoker;
 
-    private final URL url;
+  private final Invoker<T> invoker;
 
-    public InvokerWrapper(Invoker<T> invoker, URL url){
-        this.invoker = invoker;
-        this.url = url;
-    }
+  private final URL url;
 
-    public Class<T> getInterface() {
-        return invoker.getInterface();
-    }
+  public InvokerWrapper(Invoker<T> invoker, URL url) {
+    this.invoker = invoker;
+    this.url = url;
+  }
 
-    public URL getUrl() {
-        return url;
-    }
+  public Class<T> getInterface() {
+    return invoker.getInterface();
+  }
 
-    public boolean isAvailable() {
-        return invoker.isAvailable();
-    }
+  public URL getUrl() {
+    return url;
+  }
 
-    public Result invoke(Invocation invocation) throws RpcException {
-        return invoker.invoke(invocation);
-    }
+  public boolean isAvailable() {
+    return invoker.isAvailable();
+  }
 
-    public void destroy() {
-        invoker.destroy();
-    }
+  public Result invoke(Invocation invocation) throws RpcException {
+    return invoker.invoke(invocation);
+  }
+
+  public void destroy() {
+    invoker.destroy();
+  }
 
 }

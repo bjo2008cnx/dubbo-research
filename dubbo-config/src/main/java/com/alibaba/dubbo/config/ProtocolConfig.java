@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,308 +30,309 @@ import com.alibaba.dubbo.rpc.Protocol;
 
 /**
  * ProtocolConfig
- * 
+ *
  * @author william.liangf
  */
 public class ProtocolConfig extends AbstractConfig {
 
-    private static final long   serialVersionUID = 6913423882496634749L;
+  private static final long serialVersionUID = 6913423882496634749L;
 
-    // 服务协议
-    private String              name;
+  // 服务协议
+  private String name;
 
-    // 服务IP地址(多网卡时使用)
-    private String              host;
+  // 服务IP地址(多网卡时使用)
+  private String host;
 
-    // 服务端口
-    private Integer             port;
+  // 服务端口
+  private Integer port;
 
-    // 上下文路径
-    private String              contextpath;
-    
-    // 线程池类型
-    private String              threadpool;
-    
-    // 线程池大小(固定大小)
-    private Integer             threads;
-    
-    // IO线程池大小(固定大小)
-    private Integer             iothreads;
-    
-    // 线程池队列大小
-    private Integer             queues;
-    
-    // 最大接收连接数
-    private Integer             accepts;
-    
-    // 协议编码
-    private String              codec;
-    
-    // 序列化方式
-    private String              serialization;
-    
-    // 字符集
-    private String              charset;
-    
-    // 最大请求数据长度
-    private Integer             payload;
-    
-    // 缓存区大小
-    private Integer             buffer;
+  // 上下文路径
+  private String contextpath;
 
-    // 访问日志
-    private String              accesslog;
-    
-    // 网络传输方式
-    private String              transporter;
-    
-    // 信息交换方式
-    private String              exchanger;
-    
-    // 服务器端实现
-    private String              server;
-    
-    // 客户端实现
-    private String              client;
-    
-    // 支持的telnet命令，多个命令用逗号分隔
-    private String              telnet;
+  // 线程池类型
+  private String threadpool;
 
-    // status检查
-    private String              status;
-    
-    // 参数
-    private Map<String, String> parameters;
-    
-    public ProtocolConfig() {
-    }
-    
-    public ProtocolConfig(String name) {
-        setName(name);
-    }
-    
-    @Parameter(excluded = true)
-    public String getName() {
-        return name;
-    }
+  // 线程池大小(固定大小)
+  private Integer threads;
 
-    public void setName(String name) {
-        checkName("name", name);
-        this.name = name;
-    }
+  // IO线程池大小(固定大小)
+  private Integer iothreads;
 
-    @Parameter(excluded = true)
-    public String getHost() {
-        return host;
-    }
+  // 线程池队列大小
+  private Integer queues;
 
-    public void setHost(String host) {
-        checkName("host", host);
-        this.host = host;
-    }
+  // 最大接收连接数
+  private Integer accepts;
 
-    @Parameter(excluded = true)
-    public Integer getPort() {
-        return port;
-    }
+  // 协议编码
+  private String codec;
 
-    public void setPort(Integer port) {
-        this.port = port;
-    }
+  // 序列化方式
+  private String serialization;
 
-    @Deprecated
-    @Parameter(excluded = true)
-    public String getPath() {
-        return getContextpath();
-    }
+  // 字符集
+  private String charset;
 
-    @Deprecated
-    public void setPath(String path) {
-        setContextpath(path);
-    }
+  // 最大请求数据长度
+  private Integer payload;
 
-    @Parameter(excluded = true)
-    public String getContextpath() {
-        return contextpath;
-    }
+  // 缓存区大小
+  private Integer buffer;
 
-    public void setContextpath(String contextpath) {
-        checkPathName("contextpath", contextpath);
-        this.contextpath = contextpath;
-    }
+  // 访问日志
+  private String accesslog;
 
-    public String getThreadpool() {
-        return threadpool;
-    }
+  // 网络传输方式
+  private String transporter;
 
-    public void setThreadpool(String threadpool) {
-        checkExtension(ThreadPool.class, "threadpool", threadpool);
-        this.threadpool = threadpool;
-    }
+  // 信息交换方式
+  private String exchanger;
 
-    public Integer getThreads() {
-        return threads;
-    }
+  // 服务器端实现
+  private String server;
 
-    public void setThreads(Integer threads) {
-        this.threads = threads;
-    }
+  // 客户端实现
+  private String client;
 
-    public Integer getIothreads() {
-        return iothreads;
-    }
+  // 支持的telnet命令，多个命令用逗号分隔
+  private String telnet;
 
-    public void setIothreads(Integer iothreads) {
-        this.iothreads = iothreads;
-    }
+  // status检查
+  private String status;
 
-    public Integer getQueues() {
-        return queues;
-    }
-    
-    public void setQueues(Integer queues) {
-        this.queues = queues;
-    }
-    
-    public Integer getAccepts() {
-        return accepts;
-    }
-    
-    public void setAccepts(Integer accepts) {
-        this.accepts = accepts;
-    }
+  // 参数
+  private Map<String, String> parameters;
 
-    public String getCodec() {
-        return codec;
-    }
+  public ProtocolConfig() {
+  }
 
-    public void setCodec(String codec) {
-        if ("dubbo".equals(name)) {
-            checkMultiExtension(Codec.class, "codec", codec);
-        }
-        this.codec = codec;
-    }
+  public ProtocolConfig(String name) {
+    setName(name);
+  }
 
-    public String getSerialization() {
-        return serialization;
-    }
-    
-    public void setSerialization(String serialization) {
-        if ("dubbo".equals(name)) {
-            checkMultiExtension(Serialization.class, "serialization", serialization);
-        }
-        this.serialization = serialization;
-    }
+  @Parameter(excluded = true)
+  public String getName() {
+    return name;
+  }
 
-    public String getCharset() {
-        return charset;
-    }
+  public void setName(String name) {
+    checkName("name", name);
+    this.name = name;
+  }
 
-    public void setCharset(String charset) {
-        this.charset = charset;
-    }
+  @Parameter(excluded = true)
+  public String getHost() {
+    return host;
+  }
 
-    public Integer getPayload() {
-        return payload;
-    }
+  public void setHost(String host) {
+    checkName("host", host);
+    this.host = host;
+  }
 
-    public void setPayload(Integer payload) {
-        this.payload = payload;
-    }
+  @Parameter(excluded = true)
+  public Integer getPort() {
+    return port;
+  }
 
-    public Integer getBuffer() {
-        return buffer;
-    }
+  public void setPort(Integer port) {
+    this.port = port;
+  }
 
-    public void setBuffer(Integer buffer) {
-        this.buffer = buffer;
-    }
+  @Deprecated
+  @Parameter(excluded = true)
+  public String getPath() {
+    return getContextpath();
+  }
 
-    public String getServer() {
-        return server;
-    }
+  @Deprecated
+  public void setPath(String path) {
+    setContextpath(path);
+  }
 
-    public void setServer(String server) {
-        if ("dubbo".equals(name)) {
-            checkMultiExtension(Transporter.class, "server", server);
-        }
-        this.server = server;
-    }
+  @Parameter(excluded = true)
+  public String getContextpath() {
+    return contextpath;
+  }
 
-    public String getClient() {
-        return client;
-    }
+  public void setContextpath(String contextpath) {
+    checkPathName("contextpath", contextpath);
+    this.contextpath = contextpath;
+  }
 
-    public void setClient(String client) {
-        if ("dubbo".equals(name)) {
-            checkMultiExtension(Transporter.class, "client", client);
-        }
-        this.client = client;
-    }
-    
-    public String getAccesslog() {
-        return accesslog;
-    }
-    
-    public void setAccesslog(String accesslog) {
-        this.accesslog = accesslog;
-    }
+  public String getThreadpool() {
+    return threadpool;
+  }
 
-    public String getTelnet() {
-        return telnet;
-    }
-    
-    public void setTelnet(String telnet) {
-        checkMultiExtension(TelnetHandler.class, "telnet", telnet);
-        this.telnet = telnet;
-    }
+  public void setThreadpool(String threadpool) {
+    checkExtension(ThreadPool.class, "threadpool", threadpool);
+    this.threadpool = threadpool;
+  }
 
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(String status) {
-        checkMultiExtension(StatusChecker.class, "status", status);
-        this.status = status;
-    }
+  public Integer getThreads() {
+    return threads;
+  }
 
-    public String getTransporter() {
-        return transporter;
-    }
-    
-    public void setTransporter(String transporter) {
-        checkExtension(Transporter.class, "transporter", transporter);
-        this.transporter = transporter;
-    }
-    
-    public String getExchanger() {
-        return exchanger;
-    }
-    
-    public void setExchanger(String exchanger) {
-        checkExtension(Exchanger.class, "exchanger", exchanger);
-        this.exchanger = exchanger;
-    }
+  public void setThreads(Integer threads) {
+    this.threads = threads;
+  }
 
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
+  public Integer getIothreads() {
+    return iothreads;
+  }
 
-    public void setParameters(Map<String, String> parameters) {
-        this.parameters = parameters;
-    }
+  public void setIothreads(Integer iothreads) {
+    this.iothreads = iothreads;
+  }
 
-    public void destory() {
-        if (name != null) {
-            ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(name).destroy();;
-        }
-    }
+  public Integer getQueues() {
+    return queues;
+  }
 
-    public static void destroyAll() {
-        AbstractRegistryFactory.destroyAll();
-        for (String protocol : ExtensionLoader.getExtensionLoader(Protocol.class).getSupportedExtensions()) {
-            ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(protocol).destroy();
-        }
+  public void setQueues(Integer queues) {
+    this.queues = queues;
+  }
+
+  public Integer getAccepts() {
+    return accepts;
+  }
+
+  public void setAccepts(Integer accepts) {
+    this.accepts = accepts;
+  }
+
+  public String getCodec() {
+    return codec;
+  }
+
+  public void setCodec(String codec) {
+    if ("dubbo".equals(name)) {
+      checkMultiExtension(Codec.class, "codec", codec);
     }
-    
+    this.codec = codec;
+  }
+
+  public String getSerialization() {
+    return serialization;
+  }
+
+  public void setSerialization(String serialization) {
+    if ("dubbo".equals(name)) {
+      checkMultiExtension(Serialization.class, "serialization", serialization);
+    }
+    this.serialization = serialization;
+  }
+
+  public String getCharset() {
+    return charset;
+  }
+
+  public void setCharset(String charset) {
+    this.charset = charset;
+  }
+
+  public Integer getPayload() {
+    return payload;
+  }
+
+  public void setPayload(Integer payload) {
+    this.payload = payload;
+  }
+
+  public Integer getBuffer() {
+    return buffer;
+  }
+
+  public void setBuffer(Integer buffer) {
+    this.buffer = buffer;
+  }
+
+  public String getServer() {
+    return server;
+  }
+
+  public void setServer(String server) {
+    if ("dubbo".equals(name)) {
+      checkMultiExtension(Transporter.class, "server", server);
+    }
+    this.server = server;
+  }
+
+  public String getClient() {
+    return client;
+  }
+
+  public void setClient(String client) {
+    if ("dubbo".equals(name)) {
+      checkMultiExtension(Transporter.class, "client", client);
+    }
+    this.client = client;
+  }
+
+  public String getAccesslog() {
+    return accesslog;
+  }
+
+  public void setAccesslog(String accesslog) {
+    this.accesslog = accesslog;
+  }
+
+  public String getTelnet() {
+    return telnet;
+  }
+
+  public void setTelnet(String telnet) {
+    checkMultiExtension(TelnetHandler.class, "telnet", telnet);
+    this.telnet = telnet;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    checkMultiExtension(StatusChecker.class, "status", status);
+    this.status = status;
+  }
+
+  public String getTransporter() {
+    return transporter;
+  }
+
+  public void setTransporter(String transporter) {
+    checkExtension(Transporter.class, "transporter", transporter);
+    this.transporter = transporter;
+  }
+
+  public String getExchanger() {
+    return exchanger;
+  }
+
+  public void setExchanger(String exchanger) {
+    checkExtension(Exchanger.class, "exchanger", exchanger);
+    this.exchanger = exchanger;
+  }
+
+  public Map<String, String> getParameters() {
+    return parameters;
+  }
+
+  public void setParameters(Map<String, String> parameters) {
+    this.parameters = parameters;
+  }
+
+  public void destory() {
+    if (name != null) {
+      ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(name).destroy();
+      ;
+    }
+  }
+
+  public static void destroyAll() {
+    AbstractRegistryFactory.destroyAll();
+    for (String protocol : ExtensionLoader.getExtensionLoader(Protocol.class).getSupportedExtensions()) {
+      ExtensionLoader.getExtensionLoader(Protocol.class).getExtension(protocol).destroy();
+    }
+  }
+
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,75 +37,84 @@ import com.alibaba.dubbo.rpc.RpcInvocation;
 
 /**
  * MonitorFilterTest
- * 
+ *
  * @author william.liangf
  */
 public class MonitorFilterTest {
 
-    private volatile URL lastStatistics;
-    
-    private volatile Invocation lastInvocation;
-    
-    private final Invoker<MonitorService> serviceInvoker = new Invoker<MonitorService>() {
-        public Class<MonitorService> getInterface() {
-            return MonitorService.class;
-        }
+  private volatile URL lastStatistics;
+
+  private volatile Invocation lastInvocation;
+
+  private final Invoker<MonitorService> serviceInvoker = new Invoker<MonitorService>() {
+    public Class<MonitorService> getInterface() {
+      return MonitorService.class;
+    }
+
+    public URL getUrl() {
+      try {
+        return URL.valueOf(
+            "dubbo://" + NetUtils.getLocalHost() + ":20880?" + Constants.APPLICATION_KEY + "=abc&" + Constants.MONITOR_KEY + "="
+                + URLEncoder.encode("dubbo://" + NetUtils.getLocalHost() + ":7070", "UTF-8"));
+      } catch (UnsupportedEncodingException e) {
+        throw new IllegalStateException(e.getMessage(), e);
+      }
+    }
+
+    public boolean isAvailable() {
+      return false;
+    }
+
+    public Result invoke(Invocation invocation) throws RpcException {
+      lastInvocation = invocation;
+      return null;
+    }
+
+    public void destroy() {
+    }
+  };
+
+  private MonitorFactory monitorFactory = new MonitorFactory() {
+    public Monitor getMonitor(final URL url) {
+      return new Monitor() {
         public URL getUrl() {
-            try {
-                return URL.valueOf("dubbo://" + NetUtils.getLocalHost() + ":20880?" + Constants.APPLICATION_KEY + "=abc&" + Constants.MONITOR_KEY + "=" + URLEncoder.encode("dubbo://" + NetUtils.getLocalHost() + ":7070", "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                throw new IllegalStateException(e.getMessage(), e);
-            }
+          return url;
         }
+
         public boolean isAvailable() {
-            return false;
+          return true;
         }
-        public Result invoke(Invocation invocation) throws RpcException {
-            lastInvocation = invocation;
-            return null;
-        }
+
         public void destroy() {
         }
-    };
-    
-    private MonitorFactory monitorFactory = new MonitorFactory() {
-        public Monitor getMonitor(final URL url) {
-            return new Monitor() {
-                public URL getUrl() {
-                    return url;
-                }
-                public boolean isAvailable() {
-                    return true;
-                }
-                public void destroy() {
-                }
-                public void count(URL statistics) {
-                    MonitorFilterTest.this.lastStatistics = statistics;
-                }
-            };
+
+        public void count(URL statistics) {
+          MonitorFilterTest.this.lastStatistics = statistics;
         }
-    };
-    
-    @Test
-    public void testFilter() throws Exception {
-        MonitorFilter monitorFilter = new MonitorFilter();
-        monitorFilter.setMonitorFactory(monitorFactory);
-        Invocation invocation = new RpcInvocation("aaa", new Class<?>[0], new Object[0]);
-        RpcContext.getContext().setRemoteAddress(NetUtils.getLocalHost(), 20880).setLocalAddress(NetUtils.getLocalHost(), 2345);
-        monitorFilter.invoke(serviceInvoker, invocation);
-        while (lastStatistics == null) {
-            Thread.sleep(10);
-        }
-        Assert.assertEquals("abc", lastStatistics.getParameter(MonitorService.APPLICATION));
-        Assert.assertEquals(MonitorService.class.getName(), lastStatistics.getParameter(MonitorService.INTERFACE));
-        Assert.assertEquals("aaa", lastStatistics.getParameter(MonitorService.METHOD));
-        Assert.assertEquals(NetUtils.getLocalHost(), lastStatistics.getHost());
-        Assert.assertEquals(NetUtils.getLocalHost() + ":20880", lastStatistics.getParameter(MonitorService.SERVER));
-        Assert.assertEquals(null, lastStatistics.getParameter(MonitorService.CLIENT));
-        Assert.assertEquals(1, lastStatistics.getIntParameter(MonitorService.SUCCESS));
-        Assert.assertEquals(0, lastStatistics.getIntParameter(MonitorService.FAILURE));
-        Assert.assertEquals(1, lastStatistics.getIntParameter(MonitorService.CONCURRENT));
-        Assert.assertEquals(invocation, lastInvocation);
+      };
     }
+  };
+
+  @Test
+  public void testFilter() throws Exception {
+    MonitorFilter monitorFilter = new MonitorFilter();
+    monitorFilter.setMonitorFactory(monitorFactory);
+    Invocation invocation = new RpcInvocation("aaa", new Class<?>[0], new Object[0]);
+    RpcContext.getContext().setRemoteAddress(NetUtils.getLocalHost(), 20880).setLocalAddress(NetUtils.getLocalHost(), 2345);
+    monitorFilter.invoke(serviceInvoker, invocation);
+    while (lastStatistics == null) {
+      Thread.sleep(10);
+    }
+    Assert.assertEquals("abc", lastStatistics.getParameter(MonitorService.APPLICATION));
+    Assert.assertEquals(MonitorService.class.getName(), lastStatistics.getParameter(MonitorService.INTERFACE));
+    Assert.assertEquals("aaa", lastStatistics.getParameter(MonitorService.METHOD));
+    Assert.assertEquals(NetUtils.getLocalHost(), lastStatistics.getHost());
+    Assert.assertEquals(NetUtils.getLocalHost() + ":20880", lastStatistics.getParameter(MonitorService.SERVER));
+    Assert.assertEquals(null, lastStatistics.getParameter(MonitorService.CLIENT));
+    Assert.assertEquals(1, lastStatistics.getIntParameter(MonitorService.SUCCESS));
+    Assert.assertEquals(0, lastStatistics.getIntParameter(MonitorService.FAILURE));
+    Assert.assertEquals(1, lastStatistics.getIntParameter(MonitorService.CONCURRENT));
+    Assert.assertEquals(invocation, lastInvocation);
+  }
 
 }

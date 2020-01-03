@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,80 +20,80 @@ import java.util.Arrays;
 
 /**
  * User
- * 
+ *
  * @author william.liangf
  */
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 5840134024756337246L;
+  private static final long serialVersionUID = 5840134024756337246L;
 
-    private String name;
+  private String name;
 
-    private int age;
-    
-    private String[] phones;
-    
-    private Address address;
-    
-    private Role role;
-    
-    public User() {
-    }
+  private int age;
 
-    public User(String name, int age, String[] phones, Address address, Role role) {
-        super();
-        this.name = name;
-        this.age = age;
-        this.phones = phones;
-        this.address = address;
-        this.role = role;
-    }
+  private String[] phones;
 
-    public String getName() {
-        return name;
-    }
+  private Address address;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  private Role role;
 
-    public int getAge() {
-        return age;
-    }
+  public User() {
+  }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+  public User(String name, int age, String[] phones, Address address, Role role) {
+    super();
+    this.name = name;
+    this.age = age;
+    this.phones = phones;
+    this.address = address;
+    this.role = role;
+  }
 
-    public String[] getPhones() {
-        return phones;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setPhones(String[] phones) {
-        this.phones = phones;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Address getAddress() {
-        return address;
-    }
+  public int getAge() {
+    return age;
+  }
 
-    public void setAddress(Address address) {
-        this.address = address;
-    }
+  public void setAge(int age) {
+    this.age = age;
+  }
 
-    public Role getRole() {
-        return role;
-    }
+  public String[] getPhones() {
+    return phones;
+  }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
+  public void setPhones(String[] phones) {
+    this.phones = phones;
+  }
 
-    @Override
-    public String toString() {
-        return "User [address=" + address + ", age=" + age + ", name=" + name + ", phones="
-                + Arrays.toString(phones) + "]" + ", role="
-                + role + "]";
-    }
+  public Address getAddress() {
+    return address;
+  }
+
+  public void setAddress(Address address) {
+    this.address = address;
+  }
+
+  public Role getRole() {
+    return role;
+  }
+
+  public void setRole(Role role) {
+    this.role = role;
+  }
+
+  @Override
+  public String toString() {
+    return "User [address=" + address + ", age=" + age + ", name=" + name + ", phones="
+        + Arrays.toString(phones) + "]" + ", role="
+        + role + "]";
+  }
 
 }

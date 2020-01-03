@@ -14,41 +14,41 @@
  - limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.alibaba</groupId>
-		<artifactId>dubbo-parent</artifactId>
-		<version>2.0.7</version>
-	</parent>
-	<artifactId>dubbo-container</artifactId>
-	<packaging>jar</packaging>
-	<name>Dubbo Container Module</name>
-	<description>The container module of dubbo project</description>
-	<properties>
-		<skip_maven_deploy>true</skip_maven_deploy>
-	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>dubbo-config</artifactId>
-			<version>${project.parent.version}</version>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<addMavenDescriptor>true</addMavenDescriptor>
-						<manifest>
-							<mainClass>com.alibaba.dubbo.container.Main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.alibaba</groupId>
+    <artifactId>dubbo-parent</artifactId>
+    <version>2.0.7</version>
+  </parent>
+  <artifactId>dubbo-container</artifactId>
+  <packaging>jar</packaging>
+  <name>Dubbo Container Module</name>
+  <description>The container module of dubbo project</description>
+  <properties>
+    <skip_maven_deploy>true</skip_maven_deploy>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>dubbo-config</artifactId>
+      <version>${project.parent.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <addMavenDescriptor>true</addMavenDescriptor>
+            <manifest>
+              <mainClass>com.alibaba.dubbo.container.Main</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

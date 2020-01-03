@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,101 +17,97 @@ package com.alibaba.dubbo.common.utils;
 
 /**
  * Pool.
- * 
+ *
  * @author qian.lei
  */
 
-public interface Pool<T>
-{
-	/**
-	 * clear.
-	 */
-	void clear() throws Exception;
+public interface Pool<T> {
 
-	/**
-	 * close pool.
-	 * 
-	 * @throws Exception.
-	 */
-	void close() throws Exception;
+  /**
+   * clear.
+   */
+  void clear() throws Exception;
 
-	/**
-	 * borrow.
-	 * 
-	 * @return object.
-	 */
-	T borrowObject() throws Exception;
+  /**
+   * close pool.
+   */
+  void close() throws Exception;
 
-	/**
-	 * borrow.
-	 * 
-	 * @param timeout timeout.
-	 * @return object.
-	 */
-	T borrowObject(long timeout) throws Exception;
+  /**
+   * borrow.
+   *
+   * @return object.
+   */
+  T borrowObject() throws Exception;
 
-	/**
-	 * return object.
-	 * 
-	 * @param obj object.
-	 */
-	void returnObject(T obj) throws Exception;
+  /**
+   * borrow.
+   *
+   * @param timeout timeout.
+   * @return object.
+   */
+  T borrowObject(long timeout) throws Exception;
 
-	/**
-	 * get factory.
-	 * 
-	 * @return Factory instance.
-	 */
-	Factory<T> getFactory();
+  /**
+   * return object.
+   *
+   * @param obj object.
+   */
+  void returnObject(T obj) throws Exception;
 
-	/**
-	 * get idle number.
-	 * 
-	 * @return idle number.
-	 */
-	int getIdleNum();
+  /**
+   * get factory.
+   *
+   * @return Factory instance.
+   */
+  Factory<T> getFactory();
 
-	/**
-	 * get active number.
-	 * 
-	 * @return active number.
-	 */
-	int getActiveNum();
+  /**
+   * get idle number.
+   *
+   * @return idle number.
+   */
+  int getIdleNum();
 
-	/**
-	 * pool factory.
-	 */
-	public interface Factory<T>
-	{
-		/**
-		 * make object.
-		 * 
-		 * @return object.
-		 * @throws Exception.
-		 */
-		T makeObject() throws Exception;
+  /**
+   * get active number.
+   *
+   * @return active number.
+   */
+  int getActiveNum();
 
-		/**
-		 * destroy object.
-		 * 
-		 * @param obj object.
-		 * @throws Exception.
-		 */
-		void destroyObject(T obj) throws Exception;
+  /**
+   * pool factory.
+   */
+  public interface Factory<T> {
 
-		/**
-		 * activate object.
-		 * 
-		 * @param obj object.
-		 */
-		void activateObject(T obj);
+    /**
+     * make object.
+     *
+     * @return object.
+     */
+    T makeObject() throws Exception;
 
-		/**
-		 * passivate object.
-		 * 
-		 * @param obj object.
-		 */
-		void passivateObject(T obj);
+    /**
+     * destroy object.
+     *
+     * @param obj object.
+     */
+    void destroyObject(T obj) throws Exception;
+
+    /**
+     * activate object.
+     *
+     * @param obj object.
+     */
+    void activateObject(T obj);
+
+    /**
+     * passivate object.
+     *
+     * @param obj object.
+     */
+    void passivateObject(T obj);
 
 //		/**
 //		 * validate object.
@@ -120,5 +116,5 @@ public interface Pool<T>
 //		 * @return valid or not.
 //		 */
 //		boolean validateObject(T obj);
-	}
+  }
 }

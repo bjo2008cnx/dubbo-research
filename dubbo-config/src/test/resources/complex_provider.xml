@@ -15,30 +15,31 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
-	
-	<dubbo:application name="complex_provider" />
-	
-	<dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234" check="false" />
-	
-	<dubbo:protocol name="dubbo" port="20882" server="netty" accesslog="D:/dubbo-access.log" />
-	<dubbo:protocol name="rmi" port="1092" />
-	<dubbo:protocol name="http" port="8082" server="jetty" />
-	<dubbo:protocol name="hessian" port="8092" server="jetty" />
-	
-	<!--
-	<dubbo:provider protocol="dubbo" port="20883" server="netty" />
-	<dubbo:provider protocol="rmi" port="1093" />
-	<dubbo:provider protocol="http" port="8083" server="jetty" />
-	-->
-	
-	<dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" ref="demoService" />
-	<dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" ref="demoService2" path="com.alibaba.demo.api.DemoService2" />
-	
-	<bean id="demoService" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceImpl" />
-	<bean id="demoService2" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceImpl2" />
-	
+
+  <dubbo:application name="complex_provider"/>
+
+  <dubbo:registry address="10.20.153.28:9090" username="admin" password="hello1234" check="false"/>
+
+  <dubbo:protocol name="dubbo" port="20882" server="netty" accesslog="D:/dubbo-access.log"/>
+  <dubbo:protocol name="rmi" port="1092"/>
+  <dubbo:protocol name="http" port="8082" server="jetty"/>
+  <dubbo:protocol name="hessian" port="8092" server="jetty"/>
+
+  <!--
+  <dubbo:provider protocol="dubbo" port="20883" server="netty" />
+  <dubbo:provider protocol="rmi" port="1093" />
+  <dubbo:provider protocol="http" port="8083" server="jetty" />
+  -->
+
+  <dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" ref="demoService"/>
+  <dubbo:service interface="com.alibaba.dubbo.demo.api.DemoService" version="1.0.0" ref="demoService2"
+    path="com.alibaba.demo.api.DemoService2"/>
+
+  <bean id="demoService" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceImpl"/>
+  <bean id="demoService2" class="com.alibaba.dubbo.demo.provider.impl.DemoServiceImpl2"/>
+
 </beans>

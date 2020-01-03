@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,53 +34,65 @@ import com.alibaba.dubbo.rpc.cluster.LoadBalance;
 
 /**
  * 失败转移，当出现失败，重试其它服务器，通常用于读操作，但重试会带来更长延迟。
- * 
- * <a href="http://en.wikipedia.org/wiki/Failover">Failover</a>
- * @author william.liangf
  *
+ * <a href="http://en.wikipedia.org/wiki/Failover">Failover</a>
+ *
+ * @author william.liangf
  */
-public class FailoverClusterInvoker<T> extends AbstractClusterInvoker<T>{
-    public FailoverClusterInvoker(Directory<T> directory) {
-        super(directory);
-    }
-    
+public class FailoverClusterInvoker<T> extends AbstractClusterInvoker<T> {
+
+  public FailoverClusterInvoker(Directory<T> directory) {
+    super(directory);
+  }
+
   public Result doInvoke(Invocation invocation, List<Invoker<T>> invokers, LoadBalance loadbalance) throws RpcException {
-        if (invokers == null || invokers.size() == 0)
-            throw new RpcException("No provider available for service " + getInterface().getName() + " on consumer " + NetUtils.getLocalHost() + " use dubbo version " + Version.getVersion() + ", Please check whether the service do exist or version is right firstly, and check the provider has started.");
-
-        int len = getUrl().getMethodIntParameter(invocation.getMethodName(), Constants.RETRIES_KEY, Constants.DEFAULT_RETRIES) + 1;
-        if (len <= 0)
-            len = 1;
-
-        // retry loop.
-        Throwable le = null; // last exception.
-        List<Invoker<T>> invoked = new ArrayList<Invoker<T>>(invokers.size()); // invoked invokers.
-        Set<URL> providers = new HashSet<URL>(len);
-        for (int i = 0; i < len; i++) {
-            //boolean pp = false; // is provider problem.
-            Invoker<T> invoker = select(loadbalance, invocation, invokers, invoked);
-            invoked.add(invoker);
-            providers.add(invoker.getUrl());
-            try {
-                return invoker.invoke(invocation);
-            } catch (RpcException e) {
-                if (e.isBiz()) throw e;
-
-                le = e;
-                //pp = true;
-            } catch (Throwable e) // biz exception.
-            {
-                throw new RpcException(e.getMessage(), e);
-            } finally {
-                //if (pp) // if provider problem, fail over.
-                //    inv.setWeight(0);
-            }
-        }
-        List<URL> urls = new ArrayList<URL>(invokers.size());
-        for(Invoker<T> invoker : invokers){
-            if(invoker != null ) 
-                urls.add(invoker.getUrl());
-        }
-        throw new RpcException("Tried " + len + " times to invoke providers " + providers + " " + loadbalance.getClass().getAnnotation(Extension.class).value() + " select from all providers " + invokers + " for service " + getInterface().getName() + " method " + invocation.getMethodName() + " on consumer " + NetUtils.getLocalHost() + " use dubbo version " + Version.getVersion() + ", but no luck to perform the invocation. Last error is: " + (le != null ? le.getMessage() : ""), le);
+    if (invokers == null || invokers.size() == 0) {
+      throw new RpcException("No provider available for service " + getInterface().getName() + " on consumer " + NetUtils.getLocalHost()
+          + " use dubbo version " + Version.getVersion()
+          + ", Please check whether the service do exist or version is right firstly, and check the provider has started.");
     }
+
+    int len = getUrl().getMethodIntParameter(invocation.getMethodName(), Constants.RETRIES_KEY, Constants.DEFAULT_RETRIES) + 1;
+    if (len <= 0) {
+      len = 1;
+    }
+
+    // retry loop.
+    Throwable le = null; // last exception.
+    List<Invoker<T>> invoked = new ArrayList<Invoker<T>>(invokers.size()); // invoked invokers.
+    Set<URL> providers = new HashSet<URL>(len);
+    for (int i = 0; i < len; i++) {
+      //boolean pp = false; // is provider problem.
+      Invoker<T> invoker = select(loadbalance, invocation, invokers, invoked);
+      invoked.add(invoker);
+      providers.add(invoker.getUrl());
+      try {
+        return invoker.invoke(invocation);
+      } catch (RpcException e) {
+        if (e.isBiz()) {
+          throw e;
+        }
+
+        le = e;
+        //pp = true;
+      } catch (Throwable e) // biz exception.
+      {
+        throw new RpcException(e.getMessage(), e);
+      } finally {
+        //if (pp) // if provider problem, fail over.
+        //    inv.setWeight(0);
+      }
+    }
+    List<URL> urls = new ArrayList<URL>(invokers.size());
+    for (Invoker<T> invoker : invokers) {
+      if (invoker != null) {
+        urls.add(invoker.getUrl());
+      }
+    }
+    throw new RpcException(
+        "Tried " + len + " times to invoke providers " + providers + " " + loadbalance.getClass().getAnnotation(Extension.class).value()
+            + " select from all providers " + invokers + " for service " + getInterface().getName() + " method " + invocation
+            .getMethodName() + " on consumer " + NetUtils.getLocalHost() + " use dubbo version " + Version.getVersion()
+            + ", but no luck to perform the invocation. Last error is: " + (le != null ? le.getMessage() : ""), le);
+  }
 }

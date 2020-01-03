@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,113 +23,113 @@ import java.util.Map;
 
 /**
  * DemoServiceMock
- * 
+ *
  * @author william.liangf
  */
 public class DemoServiceStub implements DemoService {
-    
-    private DemoService demoService;
 
-	public DemoServiceStub(DemoService demoService){
-        this.demoService = demoService;
-    }
+  private DemoService demoService;
 
-    public Welcome sayHello(User user) {
-        System.out.println("-----------------Stub");
-        return demoService.sayHello(user);
-    }
+  public DemoServiceStub(DemoService demoService) {
+    this.demoService = demoService;
+  }
 
-    public String sayOK() {
-        return demoService.sayOK();
-    }
+  public Welcome sayHello(User user) {
+    System.out.println("-----------------Stub");
+    return demoService.sayHello(user);
+  }
 
-    public void say() {
-        demoService.say();
-    }
+  public String sayOK() {
+    return demoService.sayOK();
+  }
 
-    public String sayName(String name) {
-        return demoService.sayName(name);
-    }
+  public void say() {
+    demoService.say();
+  }
 
-    public long sayLong(long id) {
-        return demoService.sayLong(id);
-    }
+  public String sayName(String name) {
+    return demoService.sayName(name);
+  }
 
-    public float sayFloat(float id) {
-        return demoService.sayFloat(id);
-    }
+  public long sayLong(long id) {
+    return demoService.sayLong(id);
+  }
 
-    public short sayShort(short id) {
-        return demoService.sayShort(id);
-    }
+  public float sayFloat(float id) {
+    return demoService.sayFloat(id);
+  }
 
-    public Role sayRole(Role role) {
-        return demoService.sayRole(role);
-    }
+  public short sayShort(short id) {
+    return demoService.sayShort(id);
+  }
 
-    public Role[] sayRoles(Role[] role) {
-        return demoService.sayRoles(role);
-    }
+  public Role sayRole(Role role) {
+    return demoService.sayRole(role);
+  }
 
-    public List<User> sayList(List<User> role) {
-        return demoService.sayList(role);
-    }
+  public Role[] sayRoles(Role[] role) {
+    return demoService.sayRoles(role);
+  }
 
-    public Welcome sayTwoHello(User user, User user2) {
-        return demoService.sayTwoHello(user, user2);
-    }
+  public List<User> sayList(List<User> role) {
+    return demoService.sayList(role);
+  }
 
-    public String sayTwoName(String name1, String name2) {
-        return demoService.sayTwoName(name1, name2);
-    }
+  public Welcome sayTwoHello(User user, User user2) {
+    return demoService.sayTwoHello(user, user2);
+  }
 
-    public HashSet<String> sayTwoParam(String name1, HashSet<String> name2) {
-        return demoService.sayTwoParam(name1, name2);
-    }
+  public String sayTwoName(String name1, String name2) {
+    return demoService.sayTwoName(name1, name2);
+  }
 
-    public String sayQuery(IndexQueryParameter param) {
-        return demoService.sayQuery(param);
-    }
+  public HashSet<String> sayTwoParam(String name1, HashSet<String> name2) {
+    return demoService.sayTwoParam(name1, name2);
+  }
 
-    public Map<Object, Object> sayMap(Map<Object, Object> map) {
-        return demoService.sayMap(map);
-    }
+  public String sayQuery(IndexQueryParameter param) {
+    return demoService.sayQuery(param);
+  }
 
-    public HashMap<Object, Object> sayHashMap(HashMap<Object, Object> map) {
-        return demoService.sayHashMap(map);
-    }
+  public Map<Object, Object> sayMap(Map<Object, Object> map) {
+    return demoService.sayMap(map);
+  }
 
-    public LinkedHashMap<Object, Object> sayLinkedHashMap(LinkedHashMap<Object, Object> map) {
-        return demoService.sayLinkedHashMap(map);
-    }
+  public HashMap<Object, Object> sayHashMap(HashMap<Object, Object> map) {
+    return demoService.sayHashMap(map);
+  }
 
-    public void throwException() {
-        demoService.throwException();
-    }
+  public LinkedHashMap<Object, Object> sayLinkedHashMap(LinkedHashMap<Object, Object> map) {
+    return demoService.sayLinkedHashMap(map);
+  }
 
-    public List<String> getEnvironment() {
-        return demoService.getEnvironment();
-    }
+  public void throwException() {
+    demoService.throwException();
+  }
 
-    public List<String> getScene() {
-        return demoService.getScene();
-    }
+  public List<String> getEnvironment() {
+    return demoService.getEnvironment();
+  }
 
-    public List<Person> listPerson(Person person) {
-        return demoService.listPerson(person);
-    }
+  public List<String> getScene() {
+    return demoService.getScene();
+  }
 
-    public Person showPerson(Person person) {
-        return demoService.showPerson(person);
-    }
+  public List<Person> listPerson(Person person) {
+    return demoService.listPerson(person);
+  }
 
-    public void subscribe(IDemoCallback callback,String arg1) {
-    }
+  public Person showPerson(Person person) {
+    return demoService.showPerson(person);
+  }
 
-    public void unsubscribe(IDemoCallback callback) {
-    }
-    
-    public String sayParams(String name, String parentId, Role[] roles) {
-        return null;
-    }
+  public void subscribe(IDemoCallback callback, String arg1) {
+  }
+
+  public void unsubscribe(IDemoCallback callback) {
+  }
+
+  public String sayParams(String name, String parentId, Role[] roles) {
+    return null;
+  }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,46 +19,46 @@ import com.alibaba.dubbo.common.URL;
 
 /**
  * @author ding.lid
- *
  */
 public class UrlHolder {
-    private Double Num;
-    
-    private URL url;
-    
-    private String name;
-    
-    private int age;
-    
-    public Double getNum() {
-        return Num;
-    }
 
-    public void setNum(Double num) {
-        Num = num;
-    }
+  private Double Num;
 
-    public URL getUrl() {
-        return url;
-    }
+  private URL url;
 
-    public void setUrl(URL url) {
-        this.url = url;
-    }
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  private int age;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public Double getNum() {
+    return Num;
+  }
 
-    public int getAge() {
-        return age;
-    }
+  public void setNum(Double num) {
+    Num = num;
+  }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+  public URL getUrl() {
+    return url;
+  }
+
+  public void setUrl(URL url) {
+    this.url = url;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
 }

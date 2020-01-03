@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,47 +19,43 @@ import java.io.Serializable;
 
 /**
  * RpcMessage.
- * 
+ *
  * @author qian.lei
  */
 
-public class RpcMessage implements Serializable
-{
-	private static final long serialVersionUID = -5148079121106659095L;
+public class RpcMessage implements Serializable {
 
-	private String mClassName;
+  private static final long serialVersionUID = -5148079121106659095L;
 
-	private String mMethodDesc;
+  private String mClassName;
 
-	private Class<?>[] mParameterTypes;
+  private String mMethodDesc;
 
-	private Object[] mArguments;
+  private Class<?>[] mParameterTypes;
 
-	public RpcMessage(String cn, String desc, Class<?>[] parameterTypes,Object[] args)
-	{
-		mClassName = cn;
-		mMethodDesc = desc;
-		mParameterTypes = parameterTypes;
-		mArguments = args;
-	}
+  private Object[] mArguments;
 
-	public String getClassName()
-	{
-		return mClassName;
-	}
+  public RpcMessage(String cn, String desc, Class<?>[] parameterTypes, Object[] args) {
+    mClassName = cn;
+    mMethodDesc = desc;
+    mParameterTypes = parameterTypes;
+    mArguments = args;
+  }
 
-	public String getMethodDesc()
-	{
-		return mMethodDesc;
-	}
+  public String getClassName() {
+    return mClassName;
+  }
 
-	public Class<?>[] getParameterTypes() {
-		return mParameterTypes;
-	}
+  public String getMethodDesc() {
+    return mMethodDesc;
+  }
 
-	public Object[] getArguments()
-	{
-		return mArguments;
-	}
+  public Class<?>[] getParameterTypes() {
+    return mParameterTypes;
+  }
+
+  public Object[] getArguments() {
+    return mArguments;
+  }
 
 }

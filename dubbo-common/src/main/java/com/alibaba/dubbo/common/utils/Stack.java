@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,127 +21,120 @@ import java.util.List;
 
 /**
  * Stack.
- * 
+ *
  * @author qian.lei
  */
 
-public class Stack<E>
-{
-	private int mSize = 0;
+public class Stack<E> {
 
-	private List<E> mElements = new ArrayList<E>();
+  private int mSize = 0;
 
-	public Stack(){}
+  private List<E> mElements = new ArrayList<E>();
 
-	/**
-	 * push.
-	 * 
-	 * @param ele
-	 */
-	public void push(E ele)
-	{
-		if( mElements.size() > mSize )
-			mElements.set(mSize, ele);
-		else
-			mElements.add(ele);
-		mSize++;
-	}
+  public Stack() {
+  }
 
-	/**
-	 * pop.
-	 * 
-	 * @return the last element.
-	 */
-	public E pop()
-	{
-		if( mSize == 0 )
-			throw new EmptyStackException();
-		return mElements.set(--mSize, null);
-	}
+  /**
+   * push.
+   */
+  public void push(E ele) {
+    if (mElements.size() > mSize) {
+      mElements.set(mSize, ele);
+    } else {
+      mElements.add(ele);
+    }
+    mSize++;
+  }
 
-	/**
-	 * peek.
-	 * 
-	 * @return the last element.
-	 */
-	public E peek()
-	{
-		if( mSize == 0 )
-			throw new EmptyStackException();
-		return mElements.get(mSize-1);
-	}
+  /**
+   * pop.
+   *
+   * @return the last element.
+   */
+  public E pop() {
+    if (mSize == 0) {
+      throw new EmptyStackException();
+    }
+    return mElements.set(--mSize, null);
+  }
 
-	/**
-	 * get.
-	 * 
-	 * @param index index.
-	 * @return element.
-	 */
-	public E get(int index)
-	{
-		if( index >= mSize )
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
+  /**
+   * peek.
+   *
+   * @return the last element.
+   */
+  public E peek() {
+    if (mSize == 0) {
+      throw new EmptyStackException();
+    }
+    return mElements.get(mSize - 1);
+  }
 
-		return index < 0 ? mElements.get(index+mSize) : mElements.get(index);
-	}
+  /**
+   * get.
+   *
+   * @param index index.
+   * @return element.
+   */
+  public E get(int index) {
+    if (index >= mSize) {
+      throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
+    }
 
-	/**
-	 * set.
-	 * 
-	 * @param index index.
-	 * @param value element.
-	 * @return old element.
-	 */
-	public E set(int index, E value)
-	{
-		if( index >= mSize )
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
+    return index < 0 ? mElements.get(index + mSize) : mElements.get(index);
+  }
 
-		return mElements.set(index < 0 ? index + mSize : index, value);
-	}
+  /**
+   * set.
+   *
+   * @param index index.
+   * @param value element.
+   * @return old element.
+   */
+  public E set(int index, E value) {
+    if (index >= mSize) {
+      throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
+    }
 
-	/**
-	 * remove.
-	 * 
-	 * @param index
-	 * @return
-	 */
-	public E remove(int index)
-	{
-		if( index >= mSize )
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
+    return mElements.set(index < 0 ? index + mSize : index, value);
+  }
 
-		E ret = mElements.remove(index < 0 ? index + mSize : index);
-		mSize--;
-		return ret;
-	}
+  /**
+   * remove.
+   */
+  public E remove(int index) {
+    if (index >= mSize) {
+      throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + mSize);
+    }
 
-	/**
-	 * get stack size.
-	 * 
-	 * @return size.
-	 */
-	public int size()
-	{
-		return mSize;
-	}
+    E ret = mElements.remove(index < 0 ? index + mSize : index);
+    mSize--;
+    return ret;
+  }
 
-	/**
-	 * is empty.
-	 * 
-	 * @return empty or not.
-	 */
-	public boolean isEmpty()
-	{
-		return mSize == 0;
-	}
+  /**
+   * get stack size.
+   *
+   * @return size.
+   */
+  public int size() {
+    return mSize;
+  }
 
-	/**
-	 * clear stack.
-	 */
-	public void clear()
-	{
-		mSize = 0;
-		mElements.clear();
-	}
+  /**
+   * is empty.
+   *
+   * @return empty or not.
+   */
+  public boolean isEmpty() {
+    return mSize == 0;
+  }
+
+  /**
+   * clear stack.
+   */
+  public void clear() {
+    mSize = 0;
+    mElements.clear();
+  }
 }

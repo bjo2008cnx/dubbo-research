@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,35 +20,34 @@ import java.util.Collection;
 
 /**
  * Remoting Server. (API/SPI, Prototype, ThreadSafe)
- * 
+ *
  * <a href="http://en.wikipedia.org/wiki/Client%E2%80%93server_model">Client/Server</a>
- * 
+ *
+ * @author qian.lei
  * @see com.alibaba.dubbo.remoting.exchange.Exchangers#bind(com.alibaba.dubbo.common.URL, ChannelHandler...)
  * @see com.alibaba.dubbo.remoting.Transporter#bind(com.alibaba.dubbo.common.URL, ChannelHandler)
- * @author qian.lei
  */
 public interface Server extends Endpoint, Resetable {
-    
-    /**
-     * is bound.
-     * 
-     * @return bound
-     */
-    boolean isBound();
 
-    /**
-     * get channels.
-     * 
-     * @return channels
-     */
-    Collection<Channel> getChannels();
+  /**
+   * is bound.
+   *
+   * @return bound
+   */
+  boolean isBound();
 
-    /**
-     * get channel.
-     * 
-     * @param remoteAddress
-     * @return channel
-     */
-    Channel getChannel(InetSocketAddress remoteAddress);
-    
+  /**
+   * get channels.
+   *
+   * @return channels
+   */
+  Collection<Channel> getChannels();
+
+  /**
+   * get channel.
+   *
+   * @return channel
+   */
+  Channel getChannel(InetSocketAddress remoteAddress);
+
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,188 +21,188 @@ import com.alibaba.dubbo.rpc.RpcConstants;
 
 /**
  * MethodConfig
- * 
+ *
  * @author william.liangf
  */
 public class MethodConfig extends AbstractMethodConfig {
 
-    private static final long serialVersionUID = 884908855422675941L;
+  private static final long serialVersionUID = 884908855422675941L;
 
-    // 方法名
-    private String            name;
-    
-    // 统计参数
-    private Integer           stat;
+  // 方法名
+  private String name;
 
-    // 是否重试
-    private Boolean           retry;
+  // 统计参数
+  private Integer stat;
 
-    // 是否为可靠异步
-    private Boolean           reliable;
+  // 是否重试
+  private Boolean retry;
 
-    // 方法使用线程数限制
-    private Integer           executes;
-    
-    // 是否过时
-    private Boolean           deprecated;
-    
-    // 是否需要返回
-    private Boolean           sticky;
+  // 是否为可靠异步
+  private Boolean reliable;
 
-    // 是否需要返回
-    private Boolean           isReturn;
-    
-    //异步调用回调实例
-    private Object            oninvoke;
+  // 方法使用线程数限制
+  private Integer executes;
 
-    //异步调用回调方法
-    private String            oninvokeMethod;
-    
-    //异步调用回调实例
-    private Object            onreturn;
+  // 是否过时
+  private Boolean deprecated;
 
-    //异步调用回调方法
-    private String            onreturnMethod;
-    
-    //异步调用异常回调实例
-    private Object            onthrow;
-    
-    //异步调用异常回调方法
-    private String            onthrowMethod;
-    
-    private List<ArgumentConfig> arguments;
-    
-    @Parameter(excluded = true)
-    public String getName() {
-        return name;
-    }
+  // 是否需要返回
+  private Boolean sticky;
 
-    public void setName(String name) {
-        checkMethodName("name", name);
-        this.name = name;
-    }
-    
-    public Integer getStat() {
-        return stat;
-    }
-    
-    @Deprecated
-    public void setStat(Integer stat) {
-        this.stat = stat;
-    }
+  // 是否需要返回
+  private Boolean isReturn;
 
-    @Deprecated
-    public Boolean isRetry() {
-        return retry;
-    }
+  //异步调用回调实例
+  private Object oninvoke;
 
-    @Deprecated
-    public void setRetry(Boolean retry) {
-        this.retry = retry;
-    }
+  //异步调用回调方法
+  private String oninvokeMethod;
 
-    @Deprecated
-    public Boolean isReliable() {
-        return reliable;
-    }
+  //异步调用回调实例
+  private Object onreturn;
 
-    @Deprecated
-    public void setReliable(Boolean reliable) {
-        this.reliable = reliable;
-    }
+  //异步调用回调方法
+  private String onreturnMethod;
 
-    public Integer getExecutes() {
-        return executes;
-    }
+  //异步调用异常回调实例
+  private Object onthrow;
 
-    public void setExecutes(Integer executes) {
-        this.executes = executes;
-    }
+  //异步调用异常回调方法
+  private String onthrowMethod;
 
-    public Boolean getDeprecated() {
-        return deprecated;
-    }
+  private List<ArgumentConfig> arguments;
 
-    public void setDeprecated(Boolean deprecated) {
-        this.deprecated = deprecated;
-    }
+  @Parameter(excluded = true)
+  public String getName() {
+    return name;
+  }
 
-    @SuppressWarnings("unchecked")
-    public void setArguments(List<? extends ArgumentConfig> arguments) {
-        this.arguments = (List<ArgumentConfig>) arguments;
-    }
+  public void setName(String name) {
+    checkMethodName("name", name);
+    this.name = name;
+  }
 
-    public List<ArgumentConfig> getArguments() {
-        return arguments;
-    }
+  public Integer getStat() {
+    return stat;
+  }
 
-    public Boolean getSticky() {
-        return sticky;
-    }
+  @Deprecated
+  public void setStat(Integer stat) {
+    this.stat = stat;
+  }
 
-    public void setSticky(Boolean sticky) {
-        this.sticky = sticky;
-    }
+  @Deprecated
+  public Boolean isRetry() {
+    return retry;
+  }
 
-    @Parameter(key = RpcConstants.ON_RETURN_INSTANCE_KEY, excluded = true, attribute = true)
-    public Object getOnreturn() {
-        return onreturn;
-    }
-    
-    public void setOnreturn(Object onreturn) {
-        this.onreturn = onreturn;
-    }
-    
-    @Parameter(key = RpcConstants.ON_RETURN_METHOD_KEY, excluded = true, attribute = true)
-    public String getOnreturnMethod() {
-        return onreturnMethod;
-    }
+  @Deprecated
+  public void setRetry(Boolean retry) {
+    this.retry = retry;
+  }
 
-    public void setOnreturnMethod(String onreturnMethod) {
-        this.onreturnMethod = onreturnMethod;
-    }
+  @Deprecated
+  public Boolean isReliable() {
+    return reliable;
+  }
 
-    @Parameter(key = RpcConstants.ON_THROW_INSTANCE_KEY, excluded = true, attribute = true)
-    public Object getOnthrow() {
-        return onthrow;
-    }
+  @Deprecated
+  public void setReliable(Boolean reliable) {
+    this.reliable = reliable;
+  }
 
-    public void setOnthrow(Object onthrow) {
-        this.onthrow = onthrow;
-    }
-    
-    @Parameter(key = RpcConstants.ON_THROW_METHOD_KEY, excluded = true, attribute = true)
-    public String getOnthrowMethod() {
-        return onthrowMethod;
-    }
+  public Integer getExecutes() {
+    return executes;
+  }
 
-    public void setOnthrowMethod(String onthrowMethod) {
-        this.onthrowMethod = onthrowMethod;
-    }
-    
-    @Parameter(key = RpcConstants.ON_INVOKE_INSTANCE_KEY, excluded = true, attribute = true)
-    public Object getOninvoke() {
-        return oninvoke;
-    }
-    
-    public void setOninvoke(Object oninvoke) {
-        this.oninvoke = oninvoke;
-    }
-    
-    @Parameter(key = RpcConstants.ON_INVOKE_METHOD_KEY, excluded = true, attribute = true)
-    public String getOninvokeMethod() {
-        return oninvokeMethod;
-    }
-    
-    public void setOninvokeMethod(String oninvokeMethod) {
-        this.oninvokeMethod = oninvokeMethod;
-    }
+  public void setExecutes(Integer executes) {
+    this.executes = executes;
+  }
 
-    public Boolean isReturn() {
-        return isReturn;
-    }
+  public Boolean getDeprecated() {
+    return deprecated;
+  }
 
-    public void setReturn(Boolean isReturn) {
-        this.isReturn = isReturn;
-    }    
+  public void setDeprecated(Boolean deprecated) {
+    this.deprecated = deprecated;
+  }
+
+  @SuppressWarnings("unchecked")
+  public void setArguments(List<? extends ArgumentConfig> arguments) {
+    this.arguments = (List<ArgumentConfig>) arguments;
+  }
+
+  public List<ArgumentConfig> getArguments() {
+    return arguments;
+  }
+
+  public Boolean getSticky() {
+    return sticky;
+  }
+
+  public void setSticky(Boolean sticky) {
+    this.sticky = sticky;
+  }
+
+  @Parameter(key = RpcConstants.ON_RETURN_INSTANCE_KEY, excluded = true, attribute = true)
+  public Object getOnreturn() {
+    return onreturn;
+  }
+
+  public void setOnreturn(Object onreturn) {
+    this.onreturn = onreturn;
+  }
+
+  @Parameter(key = RpcConstants.ON_RETURN_METHOD_KEY, excluded = true, attribute = true)
+  public String getOnreturnMethod() {
+    return onreturnMethod;
+  }
+
+  public void setOnreturnMethod(String onreturnMethod) {
+    this.onreturnMethod = onreturnMethod;
+  }
+
+  @Parameter(key = RpcConstants.ON_THROW_INSTANCE_KEY, excluded = true, attribute = true)
+  public Object getOnthrow() {
+    return onthrow;
+  }
+
+  public void setOnthrow(Object onthrow) {
+    this.onthrow = onthrow;
+  }
+
+  @Parameter(key = RpcConstants.ON_THROW_METHOD_KEY, excluded = true, attribute = true)
+  public String getOnthrowMethod() {
+    return onthrowMethod;
+  }
+
+  public void setOnthrowMethod(String onthrowMethod) {
+    this.onthrowMethod = onthrowMethod;
+  }
+
+  @Parameter(key = RpcConstants.ON_INVOKE_INSTANCE_KEY, excluded = true, attribute = true)
+  public Object getOninvoke() {
+    return oninvoke;
+  }
+
+  public void setOninvoke(Object oninvoke) {
+    this.oninvoke = oninvoke;
+  }
+
+  @Parameter(key = RpcConstants.ON_INVOKE_METHOD_KEY, excluded = true, attribute = true)
+  public String getOninvokeMethod() {
+    return oninvokeMethod;
+  }
+
+  public void setOninvokeMethod(String oninvokeMethod) {
+    this.oninvokeMethod = oninvokeMethod;
+  }
+
+  public Boolean isReturn() {
+    return isReturn;
+  }
+
+  public void setReturn(Boolean isReturn) {
+    this.isReturn = isReturn;
+  }
 }

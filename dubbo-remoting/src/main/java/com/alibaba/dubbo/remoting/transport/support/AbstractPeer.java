@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,97 +28,98 @@ import com.alibaba.dubbo.remoting.RemotingException;
 
 /**
  * AbstractPeer
- * 
+ *
  * @author qian.lei
  * @author william.liangf
  */
 public abstract class AbstractPeer implements Endpoint, ChannelHandler {
 
-    protected final Logger       logger = LoggerFactory.getLogger(getClass());
+  protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ChannelHandler handler;
+  private final ChannelHandler handler;
 
-    private volatile URL         url;
+  private volatile URL url;
 
-    private volatile boolean     closed;
+  private volatile boolean closed;
 
-    public AbstractPeer(URL url, ChannelHandler handler)  {
-        if (url == null) {
-            throw new IllegalArgumentException("url == null");
-        }
-        if (handler == null) {
-            throw new IllegalArgumentException("handler == null");
-        }
-        this.url = url;
-        this.handler = handler;
+  public AbstractPeer(URL url, ChannelHandler handler) {
+    if (url == null) {
+      throw new IllegalArgumentException("url == null");
     }
-    
-    public void send(Object message) throws RemotingException {
-        send(message, url.getBooleanParameter(Constants.SENT_KEY));
+    if (handler == null) {
+      throw new IllegalArgumentException("handler == null");
     }
-    
-    public void close() {
-        closed = true;
-    }
-    public void close(int timeout) {
-        close();
-    }
+    this.url = url;
+    this.handler = handler;
+  }
 
-    public URL getUrl() {
-        return url;
-    }
-    
-    protected void setUrl(URL url) {
-        if (url == null) {
-            throw new IllegalArgumentException("url == null");
-        }
-        this.url = url;
-    }
+  public void send(Object message) throws RemotingException {
+    send(message, url.getBooleanParameter(Constants.SENT_KEY));
+  }
 
-    public ChannelHandler getChannelHandler() {
-        return handler;
-    }
-    
-    public boolean isClosed() {
-        return closed;
-    }
+  public void close() {
+    closed = true;
+  }
 
-    public void connected(Channel ch) throws RemotingException {
-        if (closed) {
-            return;
-        }
-        handler.connected(ch);
-    }
+  public void close(int timeout) {
+    close();
+  }
 
-    public void disconnected(Channel ch) throws RemotingException {
-        handler.disconnected(ch);
-    }
+  public URL getUrl() {
+    return url;
+  }
 
-    public void sent(Channel ch, Object msg) throws RemotingException {
-        if (closed) {
-            return;
-        }
-        handler.sent(ch, msg);
+  protected void setUrl(URL url) {
+    if (url == null) {
+      throw new IllegalArgumentException("url == null");
     }
+    this.url = url;
+  }
 
-    public void received(Channel ch, Object msg) throws RemotingException {
-        if (closed) {
-            return;
-        }
-        handler.received(ch, msg);
-    }
+  public ChannelHandler getChannelHandler() {
+    return handler;
+  }
 
-    public void caught(Channel ch, Throwable ex) throws RemotingException {
-        if (ex instanceof IOException || ex instanceof RemotingException) {
-            logger.warn("IOException on channel " + ch, ex);
-        } else {
-            logger.error("Exception on channel " + ch, ex);
-        }
-        handler.caught(ch, ex);
-    }
+  public boolean isClosed() {
+    return closed;
+  }
 
-    public ChannelHandler getHandler() {
-        return handler;
+  public void connected(Channel ch) throws RemotingException {
+    if (closed) {
+      return;
     }
+    handler.connected(ch);
+  }
+
+  public void disconnected(Channel ch) throws RemotingException {
+    handler.disconnected(ch);
+  }
+
+  public void sent(Channel ch, Object msg) throws RemotingException {
+    if (closed) {
+      return;
+    }
+    handler.sent(ch, msg);
+  }
+
+  public void received(Channel ch, Object msg) throws RemotingException {
+    if (closed) {
+      return;
+    }
+    handler.received(ch, msg);
+  }
+
+  public void caught(Channel ch, Throwable ex) throws RemotingException {
+    if (ex instanceof IOException || ex instanceof RemotingException) {
+      logger.warn("IOException on channel " + ch, ex);
+    } else {
+      logger.error("Exception on channel " + ch, ex);
+    }
+    handler.caught(ch, ex);
+  }
+
+  public ChannelHandler getHandler() {
+    return handler;
+  }
 
 }

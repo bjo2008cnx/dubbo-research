@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,50 +19,48 @@ import com.alibaba.dubbo.common.URL;
 
 /**
  * MonitorService. (SPI, Prototype, ThreadSafe)
- * 
+ *
  * @author william.liangf
  */
 public interface MonitorService {
-    
-    String APPLICATION = "application";
-    
-    String INTERFACE = "interface";
 
-    String METHOD = "method";
+  String APPLICATION = "application";
 
-    String GROUP = "group";
+  String INTERFACE = "interface";
 
-    String VERSION = "version";
+  String METHOD = "method";
 
-    String CLIENT = "client";
+  String GROUP = "group";
 
-    String SERVER = "server";
+  String VERSION = "version";
 
-    String SUCCESS = "success";
+  String CLIENT = "client";
 
-    String FAILURE = "failure";
-    
-    String INPUT = "input";
+  String SERVER = "server";
 
-    String OUTPUT = "output";
+  String SUCCESS = "success";
 
-    String ELAPSED = "elapsed";
+  String FAILURE = "failure";
 
-    String CONCURRENT = "concurrent";
+  String INPUT = "input";
 
-    String MAX_INPUT = "max.input";
+  String OUTPUT = "output";
 
-    String MAX_OUTPUT = "max.output";
+  String ELAPSED = "elapsed";
 
-    String MAX_ELAPSED = "max.elapsed";
+  String CONCURRENT = "concurrent";
 
-    String MAX_CONCURRENT = "max.concurrent";
+  String MAX_INPUT = "max.input";
 
-    /**
-     * count.
-     * 
-     * @param statistics
-     */
-    void count(URL statistics);
-    
+  String MAX_OUTPUT = "max.output";
+
+  String MAX_ELAPSED = "max.elapsed";
+
+  String MAX_CONCURRENT = "max.concurrent";
+
+  /**
+   * count.
+   */
+  void count(URL statistics);
+
 }

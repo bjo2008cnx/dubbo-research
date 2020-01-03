@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,322 +41,331 @@ import com.alibaba.dubbo.remoting.telnet.codec.TelnetCodec;
 
 /**
  * ExchangeCodec.
- * 
+ *
  * @author qianlei
  * @author william.liangf
  */
 @Extension("exchange")
 public class ExchangeCodec extends TelnetCodec {
 
-    private static final Logger     logger             = LoggerFactory.getLogger(ExchangeCodec.class);
+  private static final Logger logger = LoggerFactory.getLogger(ExchangeCodec.class);
 
-    // header length.
-    protected static final int      HEADER_LENGTH      = 16;
+  // header length.
+  protected static final int HEADER_LENGTH = 16;
 
-    // magic header.
-    protected static final short    MAGIC              = (short) 0xdabb;
-    
-    protected static final byte     MAGIC_HIGH         = (byte) Bytes.short2bytes(MAGIC)[0];
-    
-    protected static final byte     MAGIC_LOW          = (byte) Bytes.short2bytes(MAGIC)[1];
+  // magic header.
+  protected static final short MAGIC = (short) 0xdabb;
 
-    // message flag.
-    protected static final byte     FLAG_REQUEST       = (byte) 0x80;
+  protected static final byte MAGIC_HIGH = (byte) Bytes.short2bytes(MAGIC)[0];
 
-    protected static final byte     FLAG_TWOWAY        = (byte) 0x40;
+  protected static final byte MAGIC_LOW = (byte) Bytes.short2bytes(MAGIC)[1];
 
-    protected static final byte     FLAG_HEARTBEAT     = (byte) 0x20;
+  // message flag.
+  protected static final byte FLAG_REQUEST = (byte) 0x80;
 
-    protected static final int      SERIALIZATION_MASK = 0x1f;
+  protected static final byte FLAG_TWOWAY = (byte) 0x40;
 
-    private static Map<Byte, Serialization> ID_SERIALIZATION_MAP   = new HashMap<Byte, Serialization>();
-    static {
-        Set<String> supportedExtensions = ExtensionLoader.getExtensionLoader(Serialization.class).getSupportedExtensions();
-        for (String name : supportedExtensions) {
-            Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getExtension(name);
-            byte idByte = serialization.getContentTypeId();
-            if (ID_SERIALIZATION_MAP.containsKey(idByte)) {
-                logger.error("Serialization extension " + serialization.getClass().getName()
-                             + " has duplicate id to Serialization extension "
-                             + ID_SERIALIZATION_MAP.get(idByte).getClass().getName()
-                             + ", ignore this Serialization extension");
-                continue;
-            }
-            ID_SERIALIZATION_MAP.put(idByte, serialization);
+  protected static final byte FLAG_HEARTBEAT = (byte) 0x20;
+
+  protected static final int SERIALIZATION_MASK = 0x1f;
+
+  private static Map<Byte, Serialization> ID_SERIALIZATION_MAP = new HashMap<Byte, Serialization>();
+
+  static {
+    Set<String> supportedExtensions = ExtensionLoader.getExtensionLoader(Serialization.class).getSupportedExtensions();
+    for (String name : supportedExtensions) {
+      Serialization serialization = ExtensionLoader.getExtensionLoader(Serialization.class).getExtension(name);
+      byte idByte = serialization.getContentTypeId();
+      if (ID_SERIALIZATION_MAP.containsKey(idByte)) {
+        logger.error("Serialization extension " + serialization.getClass().getName()
+            + " has duplicate id to Serialization extension "
+            + ID_SERIALIZATION_MAP.get(idByte).getClass().getName()
+            + ", ignore this Serialization extension");
+        continue;
+      }
+      ID_SERIALIZATION_MAP.put(idByte, serialization);
+    }
+  }
+
+  public Short getMagicCode() {
+    return MAGIC;
+  }
+
+  public void encode(Channel channel, OutputStream os, Object msg) throws IOException {
+    if (msg instanceof Request) {
+      encodeRequest(channel, os, (Request) msg);
+    } else if (msg instanceof Response) {
+      encodeResponse(channel, os, (Response) msg);
+    } else {
+      super.encode(channel, os, msg);
+    }
+  }
+
+  public Object decode(Channel channel, InputStream is) throws IOException {
+    int readable = is.available();
+    byte[] header = new byte[Math.min(readable, HEADER_LENGTH)];
+    is.read(header);
+    return decode(channel, is, readable, header);
+  }
+
+  protected Object decode(Channel channel, InputStream is, int readable, byte[] header) throws IOException {
+    // check magic number.
+    if (readable > 0 && header[0] != MAGIC_HIGH
+        || readable > 1 && header[1] != MAGIC_LOW) {
+      int length = header.length;
+      if (header.length < readable) {
+        header = Bytes.copyOf(header, readable);
+        is.read(header, length, readable - length);
+      }
+      for (int i = 1; i < header.length - 1; i++) {
+        if (header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW) {
+          UnsafeByteArrayInputStream bis = ((UnsafeByteArrayInputStream) is);
+          bis.position(bis.position() - header.length + i);
+          header = Bytes.copyOf(header, i);
+          break;
         }
+      }
+      return super.decode(channel, is, readable, header);
+    }
+    // check length.
+    if (readable < HEADER_LENGTH) {
+      return NEED_MORE_INPUT;
     }
 
-    public Short getMagicCode() {
-        return MAGIC;
+    // get data length.
+    int len = Bytes.bytes2int(header, 12);
+    checkPayload(channel, len);
+
+    int tt = len + HEADER_LENGTH;
+    if (readable < tt) {
+      return NEED_MORE_INPUT;
     }
 
-    public void encode(Channel channel, OutputStream os, Object msg) throws IOException {
-        if (msg instanceof Request) {
-            encodeRequest(channel, os, (Request) msg);
-        } else if (msg instanceof Response) {
-            encodeResponse(channel, os, (Response) msg);
-        } else {
-            super.encode(channel, os, msg);
-        }
+    // limit input stream.
+    if (readable != tt) {
+      is = StreamUtils.limitedInputStream(is, len);
     }
 
-    public Object decode(Channel channel, InputStream is) throws IOException {
-        int readable = is.available();
-        byte[] header = new byte[Math.min(readable, HEADER_LENGTH)];
-        is.read(header);
-        return decode(channel, is, readable, header);
+    byte flag = header[2], proto = (byte) (flag & SERIALIZATION_MASK);
+    Serialization s = getSerializationById(proto);
+    if (s == null) {
+      s = getSerialization(channel);
     }
-    
-    protected Object decode(Channel channel, InputStream is, int readable, byte[] header) throws IOException {
-        // check magic number.
-        if (readable > 0 && header[0] != MAGIC_HIGH 
-                || readable > 1 && header[1] != MAGIC_LOW) {
-            int length = header.length;
-            if (header.length < readable) {
-                header = Bytes.copyOf(header, readable);
-                is.read(header, length, readable - length);
-            }
-            for (int i = 1; i < header.length - 1; i ++) {
-                if (header[i] == MAGIC_HIGH && header[i + 1] == MAGIC_LOW) {
-                    UnsafeByteArrayInputStream bis = ((UnsafeByteArrayInputStream) is);
-                    bis.position(bis.position() - header.length + i);
-                    header = Bytes.copyOf(header, i);
-                    break;
-                }
-            }
-            return super.decode(channel, is, readable, header);
+    ObjectInput in = s.deserialize(channel.getUrl(), is);
+    // get request id.
+    long id = Bytes.bytes2long(header, 4);
+    if ((flag & FLAG_REQUEST) == 0) {
+      // decode response.
+      Response res = new Response(id);
+      res.setHeartbeat((flag & FLAG_HEARTBEAT) != 0);
+      // get status.
+      byte status = header[3];
+      res.setStatus(status);
+      if (status == Response.OK) {
+        try {
+          Object data;
+          if (res.isHeartbeat()) {
+            data = decodeHeartbeatData(channel, in);
+          } else {
+            data = decodeResponseData(channel, in);
+          }
+          res.setResult(data);
+        } catch (Throwable t) {
+          res.setStatus(Response.CLIENT_ERROR);
+          res.setErrorMessage(StringUtils.toString(t));
         }
-        // check length.
-        if (readable < HEADER_LENGTH) {
-            return NEED_MORE_INPUT;
-        }
-
-        // get data length.
-        int len = Bytes.bytes2int(header, 12);
-        checkPayload(channel, len);
-
-        int tt = len + HEADER_LENGTH;
-        if( readable < tt ) {
-            return NEED_MORE_INPUT;
-        }
-
-        // limit input stream.
-        if( readable != tt )
-            is = StreamUtils.limitedInputStream(is, len);
-
-        byte flag = header[2], proto = (byte)( flag & SERIALIZATION_MASK );
-        Serialization s = getSerializationById(proto);
-        if (s == null) {
-            s = getSerialization(channel);
-        }
-        ObjectInput in = s.deserialize(channel.getUrl(), is);
-        // get request id.
-        long id = Bytes.bytes2long(header, 4);
-        if( ( flag & FLAG_REQUEST ) == 0 ) {
-            // decode response.
-            Response res = new Response(id);
-            res.setHeartbeat( ( flag & FLAG_HEARTBEAT ) != 0 );
-            // get status.
-            byte status = header[3];
-            res.setStatus(status);
-            if( status == Response.OK ) {
-                try {
-                    Object data;
-                    if (res.isHeartbeat()) {
-                        data = decodeHeartbeatData(channel, in);
-                    } else {
-                        data = decodeResponseData(channel, in);
-                    }
-                    res.setResult(data);
-                } catch (Throwable t) {
-                    res.setStatus(Response.CLIENT_ERROR);
-                    res.setErrorMessage(StringUtils.toString(t));
-                }
-            } else {
-                res.setErrorMessage(in.readUTF());
-            }
-            return res;
-        } else {
-            // decode request.
-            Request req = new Request(id);
-            req.setVersion("2.0.0");
-            req.setTwoWay( ( flag & FLAG_TWOWAY ) != 0 );
-            req.setHeartbeat( ( flag & FLAG_HEARTBEAT ) != 0 );
-            try {
-                Object data;
-                if (req.isHeartbeat()) {
-                    data = decodeHeartbeatData(channel, in);
-                } else {
-                    data = decodeRequestData(channel, in);
-                }
-                req.setData(data);
-            } catch (Throwable t) {
-                // bad request
-                req.setBroken(true);
-                req.setData(t);
-            }
-            return req;
-        }
-    }
-
-    protected void encodeRequest(Channel channel, OutputStream os, Request req) throws IOException {
-        Serialization serialization = getSerialization(channel);
-        // header.
-        byte[] header = new byte[HEADER_LENGTH];
-        // set magic number.
-        Bytes.short2bytes(MAGIC, header);
-
-        // set request and serialization flag.
-        header[2] = (byte) (FLAG_REQUEST | serialization.getContentTypeId());
-
-        if (req.isTwoWay()) header[2] |= FLAG_TWOWAY;
-        if (req.isHeartbeat()) header[2] |= FLAG_HEARTBEAT;
-
-        // set request id.
-        Bytes.long2bytes(req.getId(), header, 4);
-
-        // encode request data.
-        UnsafeByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(1024);
-        ObjectOutput out = serialization.serialize(channel.getUrl(), bos);
+      } else {
+        res.setErrorMessage(in.readUTF());
+      }
+      return res;
+    } else {
+      // decode request.
+      Request req = new Request(id);
+      req.setVersion("2.0.0");
+      req.setTwoWay((flag & FLAG_TWOWAY) != 0);
+      req.setHeartbeat((flag & FLAG_HEARTBEAT) != 0);
+      try {
+        Object data;
         if (req.isHeartbeat()) {
-            encodeHeartbeatData(channel, out, req.getData());
+          data = decodeHeartbeatData(channel, in);
         } else {
-            encodeRequestData(channel, out, req.getData());
+          data = decodeRequestData(channel, in);
         }
-        out.flushBuffer();
-        bos.flush();
-        bos.close();
-        byte[] data = bos.toByteArray();
-        Bytes.int2bytes(data.length, header, 12);
-
-        // write
-        os.write(header); // write header.
-        os.write(data); // write data.
+        req.setData(data);
+      } catch (Throwable t) {
+        // bad request
+        req.setBroken(true);
+        req.setData(t);
+      }
+      return req;
     }
+  }
 
-    protected void encodeResponse(Channel channel, OutputStream os, Response res) throws IOException {
-        Serialization serialization = getSerialization(channel);
-        // header.
-        byte[] header = new byte[HEADER_LENGTH];
-        // set magic number.
-        Bytes.short2bytes(MAGIC, header);
-        // set request and serialization flag.
-        header[2] = serialization.getContentTypeId();
-        if (res.isHeartbeat()) header[2] |= FLAG_HEARTBEAT;
-        // set response status.
-        byte status = res.getStatus();
-        header[3] = status;
-        // set request id.
-        Bytes.long2bytes(res.getId(), header, 4);
+  protected void encodeRequest(Channel channel, OutputStream os, Request req) throws IOException {
+    Serialization serialization = getSerialization(channel);
+    // header.
+    byte[] header = new byte[HEADER_LENGTH];
+    // set magic number.
+    Bytes.short2bytes(MAGIC, header);
 
-        UnsafeByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(1024);
-        ObjectOutput out = serialization.serialize(channel.getUrl(), bos);
-        // encode response data or error message.
-        if (status == Response.OK) {
-            if (res.isHeartbeat()) {
-                encodeHeartbeatData(channel, out, res.getResult());
-            } else {
-                encodeResponseData(channel, out, res.getResult());
-            }
-        }
-        else out.writeUTF(res.getErrorMessage());
-        out.flushBuffer();
-        bos.flush();
-        bos.close();
+    // set request and serialization flag.
+    header[2] = (byte) (FLAG_REQUEST | serialization.getContentTypeId());
 
-        byte[] data = bos.toByteArray();
-        Bytes.int2bytes(data.length, header, 12);
-        // write
-        os.write(header); // write header.
-        os.write(data); // write data.
+    if (req.isTwoWay()) {
+      header[2] |= FLAG_TWOWAY;
     }
-    
-    private static final Serialization getSerializationById(Byte id) {
-        return ID_SERIALIZATION_MAP.get(id);
-    }
-    
-    @Override
-    protected Object decodeData(ObjectInput in) throws IOException {
-        return decodeRequestData(in);
+    if (req.isHeartbeat()) {
+      header[2] |= FLAG_HEARTBEAT;
     }
 
-    protected Object decodeHeartbeatData(ObjectInput in) throws IOException {
-        try {
-            return in.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new IOException(StringUtils.toString("Read object failed.", e));
-        }
-    }
+    // set request id.
+    Bytes.long2bytes(req.getId(), header, 4);
 
-    protected Object decodeRequestData(ObjectInput in) throws IOException {
-        try {
-            return in.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new IOException(StringUtils.toString("Read object failed.", e));
-        }
+    // encode request data.
+    UnsafeByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(1024);
+    ObjectOutput out = serialization.serialize(channel.getUrl(), bos);
+    if (req.isHeartbeat()) {
+      encodeHeartbeatData(channel, out, req.getData());
+    } else {
+      encodeRequestData(channel, out, req.getData());
     }
+    out.flushBuffer();
+    bos.flush();
+    bos.close();
+    byte[] data = bos.toByteArray();
+    Bytes.int2bytes(data.length, header, 12);
 
-    protected Object decodeResponseData(ObjectInput in) throws IOException {
-        try {
-            return in.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new IOException(StringUtils.toString("Read object failed.", e));
-        }
-    }
-    
-    @Override
-    protected void encodeData(ObjectOutput out, Object data) throws IOException {
-        encodeRequestData(out, data);
-    }
+    // write
+    os.write(header); // write header.
+    os.write(data); // write data.
+  }
 
-    protected void encodeHeartbeatData(ObjectOutput out, Object data) throws IOException {
-        out.writeObject(data);
+  protected void encodeResponse(Channel channel, OutputStream os, Response res) throws IOException {
+    Serialization serialization = getSerialization(channel);
+    // header.
+    byte[] header = new byte[HEADER_LENGTH];
+    // set magic number.
+    Bytes.short2bytes(MAGIC, header);
+    // set request and serialization flag.
+    header[2] = serialization.getContentTypeId();
+    if (res.isHeartbeat()) {
+      header[2] |= FLAG_HEARTBEAT;
     }
+    // set response status.
+    byte status = res.getStatus();
+    header[3] = status;
+    // set request id.
+    Bytes.long2bytes(res.getId(), header, 4);
 
-    protected void encodeRequestData(ObjectOutput out, Object data) throws IOException {
-        out.writeObject(data);
+    UnsafeByteArrayOutputStream bos = new UnsafeByteArrayOutputStream(1024);
+    ObjectOutput out = serialization.serialize(channel.getUrl(), bos);
+    // encode response data or error message.
+    if (status == Response.OK) {
+      if (res.isHeartbeat()) {
+        encodeHeartbeatData(channel, out, res.getResult());
+      } else {
+        encodeResponseData(channel, out, res.getResult());
+      }
+    } else {
+      out.writeUTF(res.getErrorMessage());
     }
+    out.flushBuffer();
+    bos.flush();
+    bos.close();
 
-    protected void encodeResponseData(ObjectOutput out, Object data) throws IOException {
-        out.writeObject(data);
-    }
-    
-    @Override
-    protected Object decodeData(Channel channel, ObjectInput in) throws IOException {
-        return decodeRequestData(channel ,in);
-    }
+    byte[] data = bos.toByteArray();
+    Bytes.int2bytes(data.length, header, 12);
+    // write
+    os.write(header); // write header.
+    os.write(data); // write data.
+  }
 
-    protected Object decodeHeartbeatData(Channel channel, ObjectInput in) throws IOException {
-        try {
-            return in.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new IOException(StringUtils.toString("Read object failed.", e));
-        }
-    }
+  private static final Serialization getSerializationById(Byte id) {
+    return ID_SERIALIZATION_MAP.get(id);
+  }
 
-    protected Object decodeRequestData(Channel channel, ObjectInput in) throws IOException {
-        return decodeRequestData(in);
-    }
+  @Override
+  protected Object decodeData(ObjectInput in) throws IOException {
+    return decodeRequestData(in);
+  }
 
-    protected Object decodeResponseData(Channel channel, ObjectInput in) throws IOException {
-        return decodeRequestData(in);
+  protected Object decodeHeartbeatData(ObjectInput in) throws IOException {
+    try {
+      return in.readObject();
+    } catch (ClassNotFoundException e) {
+      throw new IOException(StringUtils.toString("Read object failed.", e));
     }
-    
-    @Override
-    protected void encodeData(Channel channel, ObjectOutput out, Object data) throws IOException {
-        encodeRequestData(channel, out, data);
-    }
+  }
 
-    protected void encodeHeartbeatData(Channel channel, ObjectOutput out, Object data) throws IOException {
-        encodeHeartbeatData(out, data);
+  protected Object decodeRequestData(ObjectInput in) throws IOException {
+    try {
+      return in.readObject();
+    } catch (ClassNotFoundException e) {
+      throw new IOException(StringUtils.toString("Read object failed.", e));
     }
+  }
 
-    protected void encodeRequestData(Channel channel, ObjectOutput out, Object data) throws IOException {
-        encodeRequestData(out, data);
+  protected Object decodeResponseData(ObjectInput in) throws IOException {
+    try {
+      return in.readObject();
+    } catch (ClassNotFoundException e) {
+      throw new IOException(StringUtils.toString("Read object failed.", e));
     }
+  }
 
-    protected void encodeResponseData(Channel channel, ObjectOutput out, Object data) throws IOException {
-        encodeResponseData(out, data);
+  @Override
+  protected void encodeData(ObjectOutput out, Object data) throws IOException {
+    encodeRequestData(out, data);
+  }
+
+  protected void encodeHeartbeatData(ObjectOutput out, Object data) throws IOException {
+    out.writeObject(data);
+  }
+
+  protected void encodeRequestData(ObjectOutput out, Object data) throws IOException {
+    out.writeObject(data);
+  }
+
+  protected void encodeResponseData(ObjectOutput out, Object data) throws IOException {
+    out.writeObject(data);
+  }
+
+  @Override
+  protected Object decodeData(Channel channel, ObjectInput in) throws IOException {
+    return decodeRequestData(channel, in);
+  }
+
+  protected Object decodeHeartbeatData(Channel channel, ObjectInput in) throws IOException {
+    try {
+      return in.readObject();
+    } catch (ClassNotFoundException e) {
+      throw new IOException(StringUtils.toString("Read object failed.", e));
     }
+  }
+
+  protected Object decodeRequestData(Channel channel, ObjectInput in) throws IOException {
+    return decodeRequestData(in);
+  }
+
+  protected Object decodeResponseData(Channel channel, ObjectInput in) throws IOException {
+    return decodeRequestData(in);
+  }
+
+  @Override
+  protected void encodeData(Channel channel, ObjectOutput out, Object data) throws IOException {
+    encodeRequestData(channel, out, data);
+  }
+
+  protected void encodeHeartbeatData(Channel channel, ObjectOutput out, Object data) throws IOException {
+    encodeHeartbeatData(out, data);
+  }
+
+  protected void encodeRequestData(Channel channel, ObjectOutput out, Object data) throws IOException {
+    encodeRequestData(out, data);
+  }
+
+  protected void encodeResponseData(Channel channel, ObjectOutput out, Object data) throws IOException {
+    encodeResponseData(out, data);
+  }
 
 }

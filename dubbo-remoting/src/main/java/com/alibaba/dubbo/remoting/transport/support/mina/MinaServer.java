@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,68 +38,69 @@ import com.alibaba.dubbo.remoting.transport.support.handler.ChannelHandlers;
 
 /**
  * MinaServer
- * 
+ *
  * @author qian.lei
  * @author william.liangf
  * @author ding.lid
  */
 public class MinaServer extends AbstractServer {
 
-    private SocketAcceptor acceptor;
+  private SocketAcceptor acceptor;
 
-    public MinaServer(URL url, ChannelHandler handler) throws RemotingException{
-        super(url, ChannelHandlers.wrap(handler, url.addParameter(Constants.THREAD_NAME_KEY, SERVER_THREAD_POOL_NAME)));
-    }
+  public MinaServer(URL url, ChannelHandler handler) throws RemotingException {
+    super(url, ChannelHandlers.wrap(handler, url.addParameter(Constants.THREAD_NAME_KEY, SERVER_THREAD_POOL_NAME)));
+  }
 
-    @Override
-    protected void doOpen() throws Throwable {
-        // set thread pool.
-        acceptor = new SocketAcceptor(getUrl().getPositiveIntParameter(Constants.IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
-                                       Executors.newCachedThreadPool(new NamedThreadFactory("MinaServerWorker",
-                                                                                            true)));
-        // config
-        SocketAcceptorConfig cfg = (SocketAcceptorConfig) acceptor.getDefaultConfig();
-        cfg.setThreadModel(ThreadModel.MANUAL);
-        // set codec.
-        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new MinaCodecAdapter(getCodec(), getDownstreamCodec(), getUrl(), this)));
-        
-        acceptor.bind(getBindAddress(), new MinaHandler(getUrl(), this));
-    }
+  @Override
+  protected void doOpen() throws Throwable {
+    // set thread pool.
+    acceptor = new SocketAcceptor(getUrl().getPositiveIntParameter(Constants.IO_THREADS_KEY, Constants.DEFAULT_IO_THREADS),
+        Executors.newCachedThreadPool(new NamedThreadFactory("MinaServerWorker",
+            true)));
+    // config
+    SocketAcceptorConfig cfg = (SocketAcceptorConfig) acceptor.getDefaultConfig();
+    cfg.setThreadModel(ThreadModel.MANUAL);
+    // set codec.
+    acceptor.getFilterChain()
+        .addLast("codec", new ProtocolCodecFilter(new MinaCodecAdapter(getCodec(), getDownstreamCodec(), getUrl(), this)));
 
-    @Override
-    protected void doClose() throws Throwable {
-        try {
-            if (acceptor != null) {
-                acceptor.unbind(getBindAddress());
-            }
-        } catch (Throwable e) {
-            logger.warn(e.getMessage(), e);
-        }
-    }
+    acceptor.bind(getBindAddress(), new MinaHandler(getUrl(), this));
+  }
 
-    public Collection<Channel> getChannels() {
-        Set<IoSession> sessions = acceptor.getManagedSessions(getBindAddress());
-        Collection<Channel> channels = new HashSet<Channel>();
-        for (IoSession session : sessions) {
-            if (session.isConnected()) {
-                channels.add(MinaChannel.getOrAddChannel(session, getUrl(), this));
-            }
-        }
-        return channels;
+  @Override
+  protected void doClose() throws Throwable {
+    try {
+      if (acceptor != null) {
+        acceptor.unbind(getBindAddress());
+      }
+    } catch (Throwable e) {
+      logger.warn(e.getMessage(), e);
     }
+  }
 
-    public Channel getChannel(InetSocketAddress remoteAddress) {
-        Set<IoSession> sessions = acceptor.getManagedSessions(getBindAddress());
-        for (IoSession session : sessions) {
-            if (session.getRemoteAddress().equals(remoteAddress)) {
-                return MinaChannel.getOrAddChannel(session, getUrl(), this);
-            }
-        }
-        return null;
+  public Collection<Channel> getChannels() {
+    Set<IoSession> sessions = acceptor.getManagedSessions(getBindAddress());
+    Collection<Channel> channels = new HashSet<Channel>();
+    for (IoSession session : sessions) {
+      if (session.isConnected()) {
+        channels.add(MinaChannel.getOrAddChannel(session, getUrl(), this));
+      }
     }
+    return channels;
+  }
 
-    public boolean isBound() {
-        return acceptor.isManaged(getBindAddress());
+  public Channel getChannel(InetSocketAddress remoteAddress) {
+    Set<IoSession> sessions = acceptor.getManagedSessions(getBindAddress());
+    for (IoSession session : sessions) {
+      if (session.getRemoteAddress().equals(remoteAddress)) {
+        return MinaChannel.getOrAddChannel(session, getUrl(), this);
+      }
     }
+    return null;
+  }
+
+  public boolean isBound() {
+    return acceptor.isManaged(getBindAddress());
+  }
 
 }

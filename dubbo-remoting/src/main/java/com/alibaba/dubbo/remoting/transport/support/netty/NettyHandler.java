@@ -1,12 +1,12 @@
 /*
  * Copyright 1999-2011 Alibaba Group.
- *  
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,86 +33,86 @@ import com.alibaba.dubbo.remoting.ChannelHandler;
 
 /**
  * NettyHandler
- * 
+ *
  * @author william.liangf
  */
 @Sharable
 public class NettyHandler extends SimpleChannelHandler {
 
-    private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
-    
-    private final URL url;
-    
-    private final ChannelHandler handler;
-    
-    public NettyHandler(URL url, ChannelHandler handler){
-        if (url == null) {
-            throw new IllegalArgumentException("url == null");
-        }
-        if (handler == null) {
-            throw new IllegalArgumentException("handler == null");
-        }
-        this.url = url;
-        this.handler = handler;
-    }
+  private final Map<String, Channel> channels = new ConcurrentHashMap<String, Channel>(); // <ip:port, channel>
 
-    public Map<String, Channel> getChannels() {
-        return channels;
-    }
+  private final URL url;
 
-    @Override
-    public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-        NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
-        try {
-            if (channel != null) {
-                channels.put(NetUtils.toAddressString((InetSocketAddress) ctx.getChannel().getRemoteAddress()), channel);
-            }
-            handler.connected(channel);
-        } finally {
-            NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
-        }
-    }
+  private final ChannelHandler handler;
 
-    @Override
-    public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-        NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
-        try {
-            channels.remove(NetUtils.toAddressString((InetSocketAddress) ctx.getChannel().getRemoteAddress()));
-            handler.disconnected(channel);
-        } finally {
-            NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
-        }
+  public NettyHandler(URL url, ChannelHandler handler) {
+    if (url == null) {
+      throw new IllegalArgumentException("url == null");
     }
-    
-    @Override
-    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
-        try {
-            handler.received(channel, e.getMessage());
-        } finally {
-            NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
-        }
+    if (handler == null) {
+      throw new IllegalArgumentException("handler == null");
     }
+    this.url = url;
+    this.handler = handler;
+  }
 
-    @Override
-    public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        super.writeRequested(ctx, e);
-        NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
-        try {
-            handler.sent(channel, e.getMessage());
-        } finally {
-            NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
-        }
-    }
+  public Map<String, Channel> getChannels() {
+    return channels;
+  }
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
-        NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
-        try {
-            handler.caught(channel, e.getCause());
-        } finally {
-            NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
-        }
+  @Override
+  public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+    NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
+    try {
+      if (channel != null) {
+        channels.put(NetUtils.toAddressString((InetSocketAddress) ctx.getChannel().getRemoteAddress()), channel);
+      }
+      handler.connected(channel);
+    } finally {
+      NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
     }
+  }
+
+  @Override
+  public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
+    NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
+    try {
+      channels.remove(NetUtils.toAddressString((InetSocketAddress) ctx.getChannel().getRemoteAddress()));
+      handler.disconnected(channel);
+    } finally {
+      NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
+    }
+  }
+
+  @Override
+  public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+    NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
+    try {
+      handler.received(channel, e.getMessage());
+    } finally {
+      NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
+    }
+  }
+
+  @Override
+  public void writeRequested(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
+    super.writeRequested(ctx, e);
+    NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
+    try {
+      handler.sent(channel, e.getMessage());
+    } finally {
+      NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
+    }
+  }
+
+  @Override
+  public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
+    NettyChannel channel = NettyChannel.getOrAddChannel(ctx.getChannel(), url, handler);
+    try {
+      handler.caught(channel, e.getCause());
+    } finally {
+      NettyChannel.removeChannelIfDisconnected(ctx.getChannel());
+    }
+  }
 
 }

@@ -15,16 +15,16 @@
  - limitations under the License.
 -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 	http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<dubbo:application name="rpc-callback-demo" />
+  <dubbo:application name="rpc-callback-demo"/>
 
-	<dubbo:registry address="127.0.0.1:9234" />
+  <dubbo:registry address="127.0.0.1:9234"/>
 
-	<dubbo:reference id="demoService" interface="com.alibaba.dubbo.callback.implicit.test.IDemoService" version="1.0.0" group="cn" >
-		<dubbo:method name="get" async="true" />
-	</dubbo:reference>
+  <dubbo:reference id="demoService" interface="com.alibaba.dubbo.callback.implicit.test.IDemoService" version="1.0.0" group="cn">
+    <dubbo:method name="get" async="true"/>
+  </dubbo:reference>
 </beans>
