@@ -18,23 +18,23 @@
  */
 package com.alibaba.demo.provider;
 
-import com.alibaba.config.ApplicationConfig;
-import com.alibaba.config.RegistryConfig;
-import com.alibaba.config.ServiceConfig;
 import com.alibaba.demo.DemoService;
+import com.alibaba.dubbo.config.ApplicationConfig;
+import com.alibaba.dubbo.config.RegistryConfig;
+import com.alibaba.dubbo.config.ServiceConfig;
 
 public class ProviderApplication {
-    /**
-     * In order to make sure multicast registry works, need to specify '-Djava.net.preferIPv4Stack=true' before
-     * launch the application
-     */
-    public static void main(String[] args) throws Exception {
-        ServiceConfig<DemoServiceImpl> service = new ServiceConfig<>();
-        service.setApplication(new ApplicationConfig("dubbo-demo-api-provider"));
-        service.setRegistry(new RegistryConfig("multicast://224.5.6.7:1234"));
-        service.setInterface(DemoService.class);
-        service.setRef(new DemoServiceImpl());
-        service.export();
-        System.in.read();
-    }
+
+  /**
+   * In order to make sure multicast registry works, need to specify '-Djava.net.preferIPv4Stack=true' before launch the application
+   */
+  public static void main(String[] args) throws Exception {
+    ServiceConfig<DemoServiceImpl> service = new ServiceConfig();
+    service.setApplication(new ApplicationConfig("dubbo-demo-api-provider"));
+    service.setRegistry(new RegistryConfig("multicast://224.5.6.7:1234"));
+    service.setInterface(DemoService.class);
+    service.setRef(new DemoServiceImpl());
+    service.export();
+    System.in.read();
+  }
 }

@@ -18,10 +18,10 @@
  */
 package com.alibaba.demo.consumer;
 
-import com.alibaba.config.ApplicationConfig;
-import com.alibaba.config.ReferenceConfig;
-import com.alibaba.config.RegistryConfig;
 import com.alibaba.demo.DemoService;
+import com.alibaba.dubbo.config.ApplicationConfig;
+import com.alibaba.dubbo.config.ReferenceConfig;
+import com.alibaba.dubbo.config.RegistryConfig;
 
 public class ConsumerApplication {
     /**
@@ -29,7 +29,7 @@ public class ConsumerApplication {
      * launch the application
      */
     public static void main(String[] args) {
-        ReferenceConfig<DemoService> reference = new ReferenceConfig<>();
+        ReferenceConfig<DemoService> reference = new ReferenceConfig<DemoService>();
         reference.setApplication(new ApplicationConfig("dubbo-demo-api-consumer"));
         reference.setRegistry(new RegistryConfig("multicast://224.5.6.7:1234"));
         reference.setInterface(DemoService.class);
