@@ -37,6 +37,7 @@
     <module>dubbo-config</module>
     <module>dubbo-container</module>
     <module>dubbo</module>
+    <module>dubbo-demo</module>
   </modules>
   <properties>
     <!-- Common libs -->
