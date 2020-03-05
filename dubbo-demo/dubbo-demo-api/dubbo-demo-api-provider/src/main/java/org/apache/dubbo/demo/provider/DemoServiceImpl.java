@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.dubbo.demo.provider;
+package com.alibaba.demo.provider;
 
-import org.apache.dubbo.demo.DemoService;
-import org.apache.dubbo.rpc.RpcContext;
+import com.alibaba.demo.DemoService;
+import com.alibaba.rpc.RpcContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

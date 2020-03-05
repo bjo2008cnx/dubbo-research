@@ -16,12 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.dubbo.demo.provider;
+package com.alibaba.demo.provider;
 
-import org.apache.dubbo.config.ApplicationConfig;
-import org.apache.dubbo.config.RegistryConfig;
-import org.apache.dubbo.config.ServiceConfig;
-import org.apache.dubbo.demo.DemoService;
+import com.alibaba.config.ApplicationConfig;
+import com.alibaba.config.RegistryConfig;
+import com.alibaba.config.ServiceConfig;
+import com.alibaba.demo.DemoService;
 
 public class ProviderApplication {
     /**
